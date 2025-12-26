@@ -1,0 +1,29 @@
+<!-- <div>
+                        <Select
+                            label="Invite Type"
+                            value={selectedInviteOption}
+                            variant="dark"
+                            options={inviteTypeOption}
+                            placeholder="Select invite type"
+                            setValue={setSelectedInviteOption}
+                        />
+                    </div> -->
+ <!-- <div className={cn(selectedInviteOption?.value === 2 ? 'block' : 'hidden')}>
+                        <div className="col-span-2 flex h-10 items-center justify-between text-sm font-normal">
+                            <p>Pass code</p>
+                            <Switch onCheckedChange={(checked) => setEnablePasscode(checked)} />
+                        </div>
+                        {enablePasscode && (
+                            <div className="col-span-2 flex flex-col gap-2 pb-3">
+                                <Input
+                                    type="number"
+                                    variant="dark"
+                                    inputMode="numeric"
+                                    placeholder="Enter Passcode"
+                                    value={passcode}
+                                    onChange={(e) => setPasscode(e.target.value)}
+                                    min={0}
+                                />
+                            </div>
+                        )}
+                    </div> -->
