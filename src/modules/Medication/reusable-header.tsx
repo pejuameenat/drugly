@@ -2,10 +2,12 @@ const ReusableHeader = ({
   heading,
   text,
   buttonText,
+  onClick,
 }: {
   heading: string;
   text: string;
   buttonText: string;
+  onClick?: () => void;
 }) => {
   return (
     <div className="flex justify-between items-center">
@@ -16,6 +18,7 @@ const ReusableHeader = ({
       <button
         type="button"
         className="bg-[#141414] p-2 text-white rounded-md text-[12px] lg:text-sm"
+        onClick={onClick}
       >
         {buttonText}
       </button>

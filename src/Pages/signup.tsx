@@ -70,7 +70,7 @@ const SignUp = () => {
               className="w-full py-2 pl-7 bg-gray-100 rounded-md"
               placeholder="Enter full name"
               value={fullName}
-              onChange={(e) => setFullName(e.target.value)}
+              onChange={(e) => setFullName(e.target.value.trim())}
             />
             <MdOutlineEmail className="absolute left-2 top-12 text-gray-300" />
           </div>

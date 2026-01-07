@@ -6,6 +6,7 @@ import Dashboard from "./Pages/dashboard";
 import Sidebar from "./Pages/Sidebar";
 import Settings from "./Pages/settings";
 import Medications from "./Pages/medications";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
  
 const App = () => {
@@ -29,12 +30,16 @@ const App = () => {
         ]
       }
    ])
-  
-  
-   return (
-     <main>
+  const queryClient = new QueryClient();
+
+ 
+
+return (
+  <main>
+       <QueryClientProvider client={queryClient}>
        <Toaster richColors={ true} />
        <RouterProvider router={router}></RouterProvider>
+       </QueryClientProvider>
      </main>
    )
  }

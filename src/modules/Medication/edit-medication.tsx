@@ -1,17 +1,19 @@
 import { X } from "lucide-react";
 import { database, auth } from "../../Firebase/config";
-import { addDoc, collection } from "firebase/firestore";
+import { updateDoc, doc, collection } from "firebase/firestore";
 import { useState, type FormEvent } from "react";
 import { toast } from "sonner";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { type CreateMedicationInput } from "../../lib/type";
 
-const MedicationForm = ({
-  showForm,
-  setShowForm,
+const EditMedicationForm = ({
+  editMed,
+  setEditMed,
+  medicationId,
 }: {
-  showForm: boolean;
-  setShowForm: (value: boolean) => void;
+  editMed: boolean;
+  setEditMed: (value: boolean) => void;
+  medicationId: string;
 }) => {
   // const [customUsage, setCustomUage] = useState(false)
   const [medName, setMedName] = useState("");
@@ -25,75 +27,25 @@ const MedicationForm = ({
   const [medEnddate, setMedEnddate] = useState("");
   const [customMMed, setCustomMed] = useState("");
 
-  const queryClient = useQueryClient();
-
-  const addMedication = async (medData: CreateMedicationInput) => {
-    return await addDoc(collection(database, "medications"), {
-      ...medData,
-      createdAt: new Date(),
-    });
-  };
-
-  const {
-    mutate: addMed,
-    isPending,
-    isError,
-  } = useMutation({
-    mutationFn: addMedication,
-    onSuccess: () => {
-      toast.success("Medication added successfully");
-
-      queryClient.invalidateQueries({
-        queryKey: ["medications"],
-      });
-
-      setShowForm(false);
-    },
-    onError: (err) => {
-      console.error(err)
-      toast.error("Error adding medication");
-    },
-  });
-
-  const handleMedSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    const user = auth?.currentUser;
-    if (!user) return;
-
-    addMed({
-      userId: user.uid,
-      medName,
-      medDose,
-      medUnit,
-      medInstructions,
-      medInteractions,
-      medInterval: medInterval || customMMed,
-      medStart,
-      medEnddate,
-      medNotes,
-    });
-  };
-
   return (
     <>
       <div
         className={` fixed top-1/2 left-1/2 w-[600px] -translate-x-1/2 -translate-y-1/2 bg-white rounded-sm p-6 shadow-lg  max-w-full overflow-y-auto max-h-[90vh] z-10 ${
-          showForm ? "visible" : "invisible"
+          editMed ? "visible" : "invisible"
         }`}
       >
         <div className="flex justify-between items-center">
-          <h2 className="text-lg font-semibold mb-4">Add Medication</h2>
+          <h2 className="text-lg font-semibold mb-4">Edit Medication</h2>
           <button
             type="button"
             className="cursor-pointer"
-            onClick={() => setShowForm(false)}
+            onClick={() => setEditMed(false)}
           >
             <X size={14} />
           </button>
         </div>
 
-        <form className="space-y-4" onSubmit={handleMedSubmit}>
+        <form className="space-y-4">
           {/* Medication Name, Dose, Unit */}
           <div className="flex gap-3  flex-col lg:flex-row  ">
             <div className="flex-1 flex flex-col">
@@ -230,21 +182,16 @@ const MedicationForm = ({
           <div className="flex justify-between gap-3">
             <button
               type="submit"
-              disabled={
-                !medName ||
-                !medDose ||
-                !medInteractions ||
-                !medUnit ||
-                isPending
-              }
+              //   disabled={isPending}
               className="bg-black text-white  rounded-md p-1 grow hover:bg-opacity-80 transition-colors duration-200 disabled:opacity-80"
             >
-              {isPending ? "Adding..." : "Add medication"}
+              {/* {isPending ? "Editing..." : "Edit medication"} */}
+              Edit Medication
             </button>
             <button
               type="button"
               className=" text-black rounded-md p-1 border"
-              onClick={() => setShowForm(false)}
+              onClick={() => setEditMed(false)}
             >
               Cancel
             </button>
@@ -255,4 +202,4 @@ const MedicationForm = ({
   );
 };
 
-export default MedicationForm;
+export default EditMedicationForm;

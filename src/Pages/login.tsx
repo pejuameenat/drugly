@@ -43,6 +43,7 @@ const Login = () => {
       console.error(error);
       toast.error("Invalid email or password!");
       setError(true);
+      setLoading(false)
     }
   };
   return (

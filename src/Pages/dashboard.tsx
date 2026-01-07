@@ -1,13 +1,44 @@
 import { Link } from "react-router-dom";
 import MedDetails from '../modules/dashboard/details'
+import { auth } from '../Firebase/config'
+import { fetchMedications } from "../lib/utilqueries.ts/medicationquery";
+import { useQuery } from "@tanstack/react-query";
+import { Loader2,Package } from "lucide-react";
 
 const Dashboard = () => {
+    const userId = auth.currentUser?.uid;
+
+  const {
+    data: medications = [],
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["medications", userId],
+    queryFn: () => fetchMedications(userId!),
+    enabled: !!userId,
+  });
+  console.log(medications);
+ if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <Loader2 size={40} className="animate-spin" />
+      </div>
+    );
+  }
+  if (isError) {
+    return (
+      <div className="flex justify-center items-center h-screen text-red-600 text-4xl">
+        Error
+      </div>
+    );
+  }
+
   return (
     <div className="lg:ml-52 pt-18 lg:pt-14 px-4">
       <div className="pb-8 ">
         <h1 className="text-xl lg:text-3xl font-semibold">Dashboard</h1>
         <span className="text[12px] text-[#141414]">
-          Your medication overview for today
+         Welcome <strong>{auth.currentUser?.displayName}</strong> , your medication overview for today
         </span>
       </div>
       <div className="lg:grid lg:grid-cols-4 gap-4 ">
@@ -29,9 +60,22 @@ const Dashboard = () => {
               + Add Medication
             </Link>
           </div>
+
+            {medications.length === 0 ? (
+                    <div className="flex  flex-col items-center justify-center h-screen text-gray-600">
+                      <Package size={100} />
+                      <span>You have not added any medications yet.</span>
+                    </div>
+                  ) : (
+                    <article className="pt-4 flex flex-col  gap-5">
+                      {/* items */}
+                      {medications?.map((med) => {
+                        return <MedDetails med={ med} />
+                      })}
+                    </article>
+                  )}
           <div>
-            {/* multiple  items */}
-            <MedDetails/>
+            {/* <MedDetails overdue='bg-red-500 text-white' /> */}
           </div>
         </article>
         <div className="bg-white rounded-md p-4 border border-[#bdbdbd] text-sm mt-4 lg:mt-0">
