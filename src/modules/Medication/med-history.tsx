@@ -74,7 +74,7 @@ const MedHistory = ({
       />
 
       <EditMedicationForm editMed={editMed}
-        setEditMed={setEditMed} medicationId={ med?.id} />
+        setEditMed={setEditMed} medicationId={ med?.id} existingMed={med} />
     </>
   );
 };

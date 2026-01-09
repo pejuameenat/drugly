@@ -1,32 +1,68 @@
 import { X } from "lucide-react";
 import { database, auth } from "../../Firebase/config";
 import { updateDoc, doc, collection } from "firebase/firestore";
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { toast } from "sonner";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { type CreateMedicationInput } from "../../lib/type";
+import { type CreateMedicationInput, type Medication } from "../../lib/type";
 
 const EditMedicationForm = ({
   editMed,
   setEditMed,
   medicationId,
+  existingMed,
 }: {
   editMed: boolean;
   setEditMed: (value: boolean) => void;
-  medicationId: string;
+    medicationId: string;
+  existingMed:Medication
 }) => {
   // const [customUsage, setCustomUage] = useState(false)
-  const [medName, setMedName] = useState("");
-  const [medDose, setMedDose] = useState("");
-  const [medInstructions, setMedInstructions] = useState("");
-  const [medInteractions, setMedInteractions] = useState("");
-  const [medUnit, setMedUnit] = useState("");
-  const [medInterval, setMedInterval] = useState("");
-  const [medNotes, setMedNotes] = useState("");
-  const [medStart, setMedStart] = useState("");
-  const [medEnddate, setMedEnddate] = useState("");
-  const [customMMed, setCustomMed] = useState("");
+  const [medName, setMedName] = useState(existingMed?.medName||"");
+  const [medDose, setMedDose] = useState(existingMed?.medDose||"");
+  const [medInstructions, setMedInstructions] = useState(existingMed?.medInstructions||"");
+  const [medInteractions, setMedInteractions] = useState(existingMed?.medInteractions||"");
+  const [medUnit, setMedUnit] = useState(existingMed?.medUnit||"");
+  const [medInterval, setMedInterval] = useState(existingMed?.medInterval||"");
+  const [medNotes, setMedNotes] = useState(existingMed?.medNotes||"");
+  const [medStart, setMedStart] = useState(existingMed?.medStart||"");
+  const [medEnddate, setMedEnddate] = useState(existingMed?.medEnddate||"");
+  const [customMMed, setCustomMed] = useState(existingMed?.medInterval||"");
+ 
+  const queryClient = useQueryClient()
 
+const { mutate: updateMeds, isPending } = useMutation({
+    mutationFn: async () => {
+      await updateDoc(doc(database, "medications", medicationId),{
+        medName,
+        medDose,
+        medUnit,
+        medInstructions,
+        medInteractions,
+        medInterval:medInterval||customMMed,
+        medStart,
+        medEnddate,
+        medNotes,
+      });
+    },
+    onSuccess: () => {
+      toast.success("Medication deleted successfully");
+      queryClient.invalidateQueries({
+        queryKey: ["medications"],
+      });
+      setEditMed(false);
+    },
+    onError: (error) => {
+      console.error(error);
+      toast.error("Error deleting medication");
+    },
+});
+  
+  const handleEditMed = (e:FormEvent) => {
+    e.preventDefault()
+    updateMeds()
+  }
+  
   return (
     <>
       <div
@@ -45,7 +81,7 @@ const EditMedicationForm = ({
           </button>
         </div>
 
-        <form className="space-y-4">
+        <form className="space-y-4" onSubmit={handleEditMed}>
           {/* Medication Name, Dose, Unit */}
           <div className="flex gap-3  flex-col lg:flex-row  ">
             <div className="flex-1 flex flex-col">
@@ -57,6 +93,7 @@ const EditMedicationForm = ({
                 placeholder="e.g., Metformin"
                 className="p-2 bg-gray-100 rounded border border-gray-200 focus:outline-none focus:ring-1 focus:ring-blue-500"
                 required
+                value={medName}
                 onChange={(e) => setMedName(e.target.value)}
               />
             </div>
@@ -68,6 +105,7 @@ const EditMedicationForm = ({
                 placeholder="500"
                 className="p-2 bg-gray-100 rounded border border-gray-200 focus:outline-none focus:ring-1 focus:ring-blue-500"
                 required
+                value={medDose}
                 onChange={(e) => setMedDose(e.target.value)}
               />
             </div>
@@ -79,6 +117,7 @@ const EditMedicationForm = ({
                 placeholder="mg"
                 className="p-2 bg-gray-100 rounded border border-gray-200 focus:outline-none focus:ring-1 focus:ring-blue-500"
                 required
+                value={medUnit}
                 onChange={(e) => setMedUnit(e.target.value)}
               />
             </div>
@@ -92,6 +131,7 @@ const EditMedicationForm = ({
               placeholder="e.g., Take with food"
               className="p-2 bg-gray-100 rounded border border-gray-200 focus:outline-none focus:ring-1 focus:ring-blue-500"
               required
+              value={medInstructions}
               onChange={(e) => setMedInstructions(e.target.value)}
             />
           </div>
@@ -106,6 +146,7 @@ const EditMedicationForm = ({
               placeholder="e.g., Avoid alcohol"
               className="p-2 bg-gray-100 rounded border border-gray-200 focus:outline-none focus:ring-1 focus:ring-blue-500"
               required
+              value={medInteractions}
               onChange={(e) => setMedInteractions(e.target.value)}
             />
           </div>
@@ -120,13 +161,15 @@ const EditMedicationForm = ({
                   placeholder="3 times daily"
                   className="p-2 bg-gray-100 rounded border border-gray-200 flex-1 focus:outline-none focus:ring-1 f
                   requiredocus:ring-blue-500 w-full"
+
                   onChange={(e) => setCustomMed(e.target.value)}
                 />
               )}
               <select
                 className={`p-2 bg-gray-100 rounded border border-gray-200 focus:outline-none focus:ring-1 focus:ring-blue-500 ${
                   medInterval === "as needed" ? "w-1/2" : "w-full"
-                }`}
+                  }`}
+                value={medInterval}
                 onChange={(e) => setMedInterval(e.target.value)}
               >
                 <option>every 8 hours</option>
@@ -154,6 +197,7 @@ const EditMedicationForm = ({
                 type="date"
                 className="p-2 bg-gray-100 rounded border border-gray-200 focus:outline-none focus:ring-1 focus:ring-blue-500"
                 required
+                value={medStart}
                 onChange={(e) => setMedStart(e.target.value)}
               />
             </div>
@@ -165,6 +209,7 @@ const EditMedicationForm = ({
               <input
                 type="date"
                 className="p-2 bg-gray-100 rounded border border-gray-200 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                value={medEnddate}
                 onChange={(e) => setMedEnddate(e.target.value)}
               />
             </div>
@@ -176,17 +221,17 @@ const EditMedicationForm = ({
             <textarea
               rows={3}
               className="p-2 bg-gray-100 rounded border border-gray-200 focus:outline-none focus:ring-1 focus:ring-blue-500"
+              value={medNotes}
               onChange={(e) => setMedNotes(e.target.value)}
             />
           </div>
           <div className="flex justify-between gap-3">
             <button
               type="submit"
-              //   disabled={isPending}
+                disabled={isPending}
               className="bg-black text-white  rounded-md p-1 grow hover:bg-opacity-80 transition-colors duration-200 disabled:opacity-80"
             >
-              {/* {isPending ? "Editing..." : "Edit medication"} */}
-              Edit Medication
+              {isPending ? "Editing..." : "Edit medication"}
             </button>
             <button
               type="button"
