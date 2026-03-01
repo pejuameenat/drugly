@@ -12,6 +12,7 @@ export type Medication = {
   medStart?: string;
   medNotes?: string;
   createdAt?: any;  
+  
 };
 
 export type CreateMedicationInput = {
@@ -25,4 +26,5 @@ export type CreateMedicationInput = {
   medStart: string;
   medEnddate?: string;
   medNotes?: string;
+  isActive:boolean
 };

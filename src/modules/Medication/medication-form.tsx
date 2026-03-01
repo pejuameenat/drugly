@@ -10,10 +10,10 @@ const MedicationForm = ({
   showForm,
   setShowForm,
 }: {
-  showForm: boolean;
+  showForm: string|null;
   setShowForm: (value: boolean) => void;
 }) => {
-  // const [customUsage, setCustomUage] = useState(false)
+  const [isActive, setIsActive] = useState(true)
   const [medName, setMedName] = useState("");
   const [medDose, setMedDose] = useState("");
   const [medInstructions, setMedInstructions] = useState("");
@@ -23,7 +23,7 @@ const MedicationForm = ({
   const [medNotes, setMedNotes] = useState("");
   const [medStart, setMedStart] = useState("");
   const [medEnddate, setMedEnddate] = useState("");
-  const [customMMed, setCustomMed] = useState("");
+  const [customMed, setCustomMed] = useState("");
 
   const queryClient = useQueryClient();
 
@@ -37,7 +37,6 @@ const MedicationForm = ({
   const {
     mutate: addMed,
     isPending,
-    isError,
   } = useMutation({
     mutationFn: addMedication,
     onSuccess: () => {
@@ -57,7 +56,6 @@ const MedicationForm = ({
 
   const handleMedSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
     const user = auth?.currentUser;
     if (!user) return;
 
@@ -68,10 +66,11 @@ const MedicationForm = ({
       medUnit,
       medInstructions,
       medInteractions,
-      medInterval: medInterval || customMMed,
+      medInterval: medInterval=== 'as needed'? customMed:medInterval,
       medStart,
       medEnddate,
       medNotes,
+      isActive
     });
   };
 
@@ -79,7 +78,7 @@ const MedicationForm = ({
     <>
       <div
         className={` fixed top-1/2 left-1/2 w-[600px] -translate-x-1/2 -translate-y-1/2 bg-white rounded-sm p-6 shadow-lg  max-w-full overflow-y-auto max-h-[90vh] z-10 ${
-          showForm ? "visible" : "invisible"
+          showForm==='add' ? "visible" : "invisible"
         }`}
       >
         <div className="flex justify-between items-center">

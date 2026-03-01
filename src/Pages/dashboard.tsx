@@ -4,10 +4,11 @@ import { auth } from '../Firebase/config'
 import { fetchMedications } from "../lib/utilqueries.ts/medicationquery";
 import { useQuery } from "@tanstack/react-query";
 import { Loader2,Package } from "lucide-react";
+import { useAuth } from "../Firebase/auth-context";
 
 const Dashboard = () => {
-    const userId = auth.currentUser?.uid;
-
+  const {userId, loading } = useAuth()
+  
   const {
     data: medications = [],
     isLoading,
@@ -15,7 +16,7 @@ const Dashboard = () => {
   } = useQuery({
     queryKey: ["medications", userId],
     queryFn: () => fetchMedications(userId!),
-    enabled: !!userId,
+    enabled: !!userId||!loading,
   });
   console.log(medications);
  if (isLoading) {
@@ -70,7 +71,7 @@ const Dashboard = () => {
                     <article className="pt-4 flex flex-col  gap-5">
                       {/* items */}
                       {medications?.map((med) => {
-                        return <MedDetails med={ med} />
+                        return <MedDetails med={ med} key={med?.id} />
                       })}
                     </article>
                   )}

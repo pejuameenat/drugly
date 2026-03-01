@@ -1,11 +1,12 @@
 import { type FormEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
-import { auth } from "../Firebase/config";
+import { createUserWithEmailAndPassword, updateProfile , } from "firebase/auth";
+import { auth, database } from "../Firebase/config";
 import AuthShared from "../components/layout/auth-shared";
 import { MdOutlineLock } from "react-icons/md";
 import { MdOutlineEmail } from "react-icons/md";
 import { toast } from "sonner";
+import { doc, setDoc, serverTimestamp } from 'firebase/firestore'
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import { Loader2 } from "lucide-react";
 
@@ -41,6 +42,19 @@ const SignUp = () => {
         displayName: fullName,
       });
 
+      const user = userCredential?.user
+      //also create a user collection for later reference and updates
+
+      await setDoc(doc(database, "users", user.uid), {
+        uid: user.uid,
+        email: user.email,
+        displayName: fullName,
+        units: "mg/dL",
+        language: "en",
+        timezone: "Africa/Lagos",
+        createdAt: serverTimestamp(),
+      });
+      
       setSuccess(true);
       toast.success("Account created successfully!");
       navigate("/");

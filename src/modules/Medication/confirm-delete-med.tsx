@@ -2,11 +2,12 @@ import { deleteDoc, doc } from "firebase/firestore";
 import { database } from "../../Firebase/config";
 import { toast } from "sonner";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import type { Medication } from "../../lib/type";
 
 interface ConfirmDeleteMedProps {
-  id: string;
-  deleteMed: boolean;
-  setDeleteMed: (value: boolean) => void;
+  id?: string;
+  deleteMed: string|null;
+  setDeleteMed: (value:boolean) => void;
 }
 
 const ConfirmDeleteMed = ({
@@ -36,11 +37,11 @@ const ConfirmDeleteMed = ({
   return (
     <div
       className={`fixed top-1/2 left-1/2 w-[400px] -translate-x-1/2 -translate-y-1/2 bg-white rounded-sm p-6 shadow-lg max-w-full overflow-y-auto max-h-[90vh] z-10 ${
-        deleteMed ? "visible" : "invisible"
+        deleteMed==='delete' ? "visible" : "invisible"
       }`}
     >
       <h3 className="text-center">
-        Are you sure you want to delete this medication?
+        Are you sure you want to delete {id} medication?
       </h3>
       <div className="flex justify-center items-center gap-4 pt-4">
         <button
@@ -53,7 +54,7 @@ const ConfirmDeleteMed = ({
         <button
           type="button"
           className="rounded-md p-1 bg-red-600 text-white w-20"
-          onClick={() => deleteMedMutation(id)}
+          onClick={() => deleteMedMutation(id??'')}
           disabled={isPending}
         >
           {isPending ? "Deleting..." : "Delete"}

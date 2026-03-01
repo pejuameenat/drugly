@@ -3,17 +3,21 @@ import MedHistory from "../modules/Medication/med-history";
 import MedicationForm from "../modules/Medication/medication-form";
 import { useState } from "react";
 import UniversalOverlay from "../components/universal-overlay";
-import { auth } from "../Firebase/config";
 import { Loader2, Package } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { fetchMedications } from "../lib/utilqueries.ts/medicationquery";
+import { useAuth } from "../Firebase/auth-context";
+import { type Medication } from "../lib/type";
+import ConfirmDeleteMed from "../modules/Medication/confirm-delete-med";
+import EditMedicationForm from "../modules/Medication/edit-medication";
 
 const Medications = () => {
-  const [showForm, setShowForm] = useState(false);
-  const [deleteMed, setDeleteMed] = useState(false);
-  const [editMed, setEditMed] = useState(false);
+  const [overlayType, setOverlayType] = useState<
+    "add" | "edit" | "delete" | null
+  >(null);
+  const [selectedMed, setSelectedMed] = useState<Medication | null>(null);
 
-  const userId = auth.currentUser?.uid;
+  const { userId, loading } = useAuth();
 
   const {
     data: medications = [],
@@ -22,9 +26,8 @@ const Medications = () => {
   } = useQuery({
     queryKey: ["medications", userId],
     queryFn: () => fetchMedications(userId!),
-    enabled: !!userId,
+    enabled: !!userId || !loading,
   });
-  console.log(medications);
 
   if (isLoading) {
     return (
@@ -48,7 +51,7 @@ const Medications = () => {
           heading="Medications"
           text="   Manage your medication schedule"
           buttonText="+ Add Medication"
-          onClick={() => setShowForm(true)}
+          onClick={() => setOverlayType("add")}
         />
 
         {medications.length === 0 ? (
@@ -62,12 +65,11 @@ const Medications = () => {
             {medications?.map((med) => {
               return (
                 <MedHistory
-                  key={med.id}
-                  deleteMed={deleteMed}
-                  setDeleteMed={setDeleteMed}
-                  editMed={editMed}
-                  setEditMed={setEditMed}
+                  key={med?.id}
                   med={med}
+                  setDeleteMed={() => setOverlayType("delete")}
+                  setEditMed={() => setOverlayType("edit")}
+                  setSelectedMed={setSelectedMed}
                 />
               );
             })}
@@ -75,12 +77,24 @@ const Medications = () => {
         )}
       </section>
       <UniversalOverlay
-        overlay={showForm ? showForm : editMed ? editMed : deleteMed}
-        setOverlay={
-          showForm ? setShowForm : editMed ? setEditMed : setDeleteMed
-        }
+        overlay={overlayType !== null}
+        setOverlay={() => setOverlayType(null)}
       />
-      <MedicationForm showForm={showForm} setShowForm={setShowForm} />
+      <MedicationForm
+        showForm={overlayType}
+        setShowForm={() => setOverlayType("add")}
+      />
+      <ConfirmDeleteMed
+        deleteMed={overlayType}
+        setDeleteMed={() => setOverlayType("delete")}
+        id={selectedMed?.id}
+      />
+
+      <EditMedicationForm
+        editMed={overlayType}
+        setEditMed={() => setOverlayType("edit")}
+        existingMed={selectedMed}
+      />
     </>
   );
 };

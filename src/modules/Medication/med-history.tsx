@@ -2,21 +2,17 @@ import { RiCapsuleLine } from "react-icons/ri";
 import { MdWarning } from "react-icons/md";
 import { FiEdit, FiTrash2 } from "react-icons/fi";
 import { type Medication } from "../../lib/type";
-import ConfirmDeleteMed from "./confirm-delete-med";
-import EditMedicationForm from "./edit-medication";
 
 const MedHistory = ({
-  deleteMed,
   setDeleteMed,
-  editMed,
   setEditMed,
   med,
+  setSelectedMed,
 }: {
-  med: Medication;
-  deleteMed: boolean;
   setDeleteMed: (value: boolean) => void;
-  editMed: boolean;
   setEditMed: (value: boolean) => void;
+  med: Medication;
+  setSelectedMed: (value: Medication) => void;
 }) => {
   return (
     <>
@@ -35,46 +31,41 @@ const MedHistory = ({
             </div>
           </div>
           <span className="pt-3 pb-1 block text-[#bdbdbd]">
-            {med.medInstructions ?? "N/A"}
+            {med?.medInstructions ?? "N/A"}
           </span>
           <div className="bg-amber-50 text-amber-800 flex gap-1 p-1.5 rounded-md items-center mt-1 mb-2">
             <MdWarning className="text-amber-200" />
-            {med.medInteractions ?? "N/A"}
+            {med?.medInteractions ?? "N/A"}
           </div>
           <div>
-            <strong className="font-semibold block pb-0.5">Schedule:</strong>
+            <strong className="font-med?mibold block pb-0.5">Schedule:</strong>
             <div className="flex gap-2 text-[10px]">
-              <span className="font-semibold bg-gray-100 rounded-md p-1">
-                {med.medInterval}
+              <span className="font-med?mibold bg-gray-100 rounded-md p-1">
+                {med?.medInterval}
               </span>
-              <span className="font-semibold bg-gray-100 rounded-md p-1">
-                Ends: {med.medEnddate ?? "N/A"}
+              <span className="font-med?mibold bg-gray-100 rounded-md p-1">
+                Ends: {med?.medEnddate ?? "N/A"}
               </span>
             </div>
             <div className="flex gap-1 items-center pt-3">
               <button
                 type="button"
-                className="flex-1 border border-[#bdbdbd] rounded-md gap-1  flex items-center justify-center" onClick={()=>setEditMed(true)}
+                className="flex-1 border border-[#f0ebeb] rounded-md gap-1  flex items-center justify-center"
+                onClick={() => {
+                  setEditMed(Boolean('edit'));
+                  setSelectedMed(med);
+                }}
               >
                 <FiEdit />
                 Edit
               </button>{" "}
-              <button type="button" onClick={() => setDeleteMed(true)}>
+              <button type="button" onClick={() => setDeleteMed(Boolean('delete'))}>
                 <FiTrash2 className="text-red-700" />
               </button>
             </div>
           </div>
         </div>
       </div>
-
-      <ConfirmDeleteMed
-        deleteMed={deleteMed}
-        setDeleteMed={setDeleteMed}
-        id={med?.id}
-      />
-
-      <EditMedicationForm editMed={editMed}
-        setEditMed={setEditMed} medicationId={ med?.id} existingMed={med} />
     </>
   );
 };

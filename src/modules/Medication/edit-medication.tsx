@@ -1,52 +1,66 @@
 import { X } from "lucide-react";
-import { database, auth } from "../../Firebase/config";
-import { updateDoc, doc, collection } from "firebase/firestore";
-import { useEffect, useState, type FormEvent } from "react";
+import { database, } from "../../Firebase/config";
+import { updateDoc, doc } from "firebase/firestore";
+import { useState, useEffect, type FormEvent } from "react";
 import { toast } from "sonner";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { type CreateMedicationInput, type Medication } from "../../lib/type";
+import { type Medication } from "../../lib/type";
+import { useAuth } from "../../Firebase/auth-context";
 
 const EditMedicationForm = ({
   editMed,
   setEditMed,
-  medicationId,
   existingMed,
 }: {
-  editMed: boolean;
+  editMed: string|null;
   setEditMed: (value: boolean) => void;
-    medicationId: string;
-  existingMed:Medication
+  existingMed: Medication|null;
 }) => {
-  // const [customUsage, setCustomUage] = useState(false)
-  const [medName, setMedName] = useState(existingMed?.medName||"");
-  const [medDose, setMedDose] = useState(existingMed?.medDose||"");
-  const [medInstructions, setMedInstructions] = useState(existingMed?.medInstructions||"");
-  const [medInteractions, setMedInteractions] = useState(existingMed?.medInteractions||"");
-  const [medUnit, setMedUnit] = useState(existingMed?.medUnit||"");
-  const [medInterval, setMedInterval] = useState(existingMed?.medInterval||"");
-  const [medNotes, setMedNotes] = useState(existingMed?.medNotes||"");
-  const [medStart, setMedStart] = useState(existingMed?.medStart||"");
-  const [medEnddate, setMedEnddate] = useState(existingMed?.medEnddate||"");
-  const [customMMed, setCustomMed] = useState(existingMed?.medInterval||"");
- 
-  const queryClient = useQueryClient()
+  const [medName, setMedName] = useState<string|undefined>('');
+  const [medDose, setMedDose] = useState<string|undefined>("");
+  const [medInstructions, setMedInstructions] = useState<string|undefined>( "");
+  const [medInteractions, setMedInteractions] = useState( "" );
+  const [medUnit, setMedUnit] = useState<string|undefined>( "");
+  const [medInterval, setMedInterval] = useState<string|undefined>( "");
+  const [medNotes, setMedNotes] = useState<string|undefined>( "");
+  const [medStart, setMedStart] = useState<string|undefined>( "");
+  const [medEnddate, setMedEnddate] = useState<string|undefined>( "");
+  const [customMed, setCustomMed] = useState<string | undefined>("");
 
-const { mutate: updateMeds, isPending } = useMutation({
+  useEffect(() => {
+    if (existingMed) {
+    setMedNotes(existingMed.medNotes)
+    setMedName(existingMed.medName)
+    setMedInterval(existingMed.medInterval)
+    setMedStart(existingMed.medStart)
+    setMedDose(existingMed.medDose)
+    setMedEnddate(existingMed.medEnddate)
+    setMedUnit(existingMed.medUnit)
+    setMedInteractions(existingMed.medInteractions)
+      setMedInstructions(existingMed.medInstructions)
+  }
+  }, [existingMed])
+
+  const queryClient = useQueryClient();
+  const { userId } = useAuth();
+  
+  const { mutate: updateMeds, isPending } = useMutation({
     mutationFn: async () => {
-      await updateDoc(doc(database, "medications", medicationId),{
+      await updateDoc(doc(database, "medications", existingMed?.id??''), {
+        userId,
         medName,
         medDose,
         medUnit,
         medInstructions,
         medInteractions,
-        medInterval:medInterval||customMMed,
+        medInterval: medInterval === "as needed" ? customMed : medInterval,
         medStart,
         medEnddate,
         medNotes,
       });
     },
     onSuccess: () => {
-      toast.success("Medication deleted successfully");
+      toast.success("Medication edited successfully");
       queryClient.invalidateQueries({
         queryKey: ["medications"],
       });
@@ -54,20 +68,20 @@ const { mutate: updateMeds, isPending } = useMutation({
     },
     onError: (error) => {
       console.error(error);
-      toast.error("Error deleting medication");
+      toast.error("Error editing medication");
     },
-});
-  
-  const handleEditMed = (e:FormEvent) => {
-    e.preventDefault()
-    updateMeds()
-  }
-  
+  });
+
+  const handleEditMed = (e: FormEvent) => {
+    e.preventDefault();
+    updateMeds();
+  };
+
   return (
     <>
       <div
         className={` fixed top-1/2 left-1/2 w-[600px] -translate-x-1/2 -translate-y-1/2 bg-white rounded-sm p-6 shadow-lg  max-w-full overflow-y-auto max-h-[90vh] z-10 ${
-          editMed ? "visible" : "invisible"
+          editMed ==='edit' ? "visible" : "invisible"
         }`}
       >
         <div className="flex justify-between items-center">
@@ -117,7 +131,7 @@ const { mutate: updateMeds, isPending } = useMutation({
                 placeholder="mg"
                 className="p-2 bg-gray-100 rounded border border-gray-200 focus:outline-none focus:ring-1 focus:ring-blue-500"
                 required
-                value={medUnit}
+                value={medUnit} 
                 onChange={(e) => setMedUnit(e.target.value)}
               />
             </div>
@@ -159,16 +173,14 @@ const { mutate: updateMeds, isPending } = useMutation({
                 <input
                   type="text"
                   placeholder="3 times daily"
-                  className="p-2 bg-gray-100 rounded border border-gray-200 flex-1 focus:outline-none focus:ring-1 f
-                  requiredocus:ring-blue-500 w-full"
-
+                  className="p-2 bg-gray-100 rounded border border-gray-200 flex-1 focus:outline-none focus:ring-1 focus:ring-blue-500 w-full"
                   onChange={(e) => setCustomMed(e.target.value)}
                 />
               )}
               <select
                 className={`p-2 bg-gray-100 rounded border border-gray-200 focus:outline-none focus:ring-1 focus:ring-blue-500 ${
                   medInterval === "as needed" ? "w-1/2" : "w-full"
-                  }`}
+                }`}
                 value={medInterval}
                 onChange={(e) => setMedInterval(e.target.value)}
               >
@@ -228,7 +240,7 @@ const { mutate: updateMeds, isPending } = useMutation({
           <div className="flex justify-between gap-3">
             <button
               type="submit"
-                disabled={isPending}
+              disabled={isPending}
               className="bg-black text-white  rounded-md p-1 grow hover:bg-opacity-80 transition-colors duration-200 disabled:opacity-80"
             >
               {isPending ? "Editing..." : "Edit medication"}
