@@ -1,12 +1,12 @@
 import { type FormEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { createUserWithEmailAndPassword, updateProfile , } from "firebase/auth";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth, database } from "../Firebase/config";
 import AuthShared from "../components/layout/auth-shared";
 import { MdOutlineLock } from "react-icons/md";
 import { MdOutlineEmail } from "react-icons/md";
 import { toast } from "sonner";
-import { doc, setDoc, serverTimestamp } from 'firebase/firestore'
+import { doc, setDoc, serverTimestamp } from "firebase/firestore";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import { Loader2 } from "lucide-react";
 
@@ -35,14 +35,14 @@ const SignUp = () => {
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         email,
-        password
+        password,
       );
 
       await updateProfile(userCredential?.user, {
         displayName: fullName,
       });
 
-      const user = userCredential?.user
+      const user = userCredential?.user;
       //also create a user collection for later reference and updates
 
       await setDoc(doc(database, "users", user.uid), {
@@ -54,14 +54,17 @@ const SignUp = () => {
         timezone: "Africa/Lagos",
         createdAt: serverTimestamp(),
       });
-      
+
       setSuccess(true);
-      toast.success("Account created successfully!");
+      if (success) {
+        toast.success("Account created successfully!");
+      }
       navigate("/");
-    } catch (error) {
+    } catch {
       setError(true);
-      toast.error("cant create user!");
-      console.error(error);
+      if (error) {
+        toast.error("cant create user!");
+      }
     } finally {
       setLoading(false);
     }
