@@ -20,7 +20,6 @@ const Login = () => {
   const navigate = useNavigate();
   const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("loogin!");
     setLoading(true);
     setSuccess(false);
     setError(false);
@@ -28,22 +27,23 @@ const Login = () => {
       const userCredential = await signInWithEmailAndPassword(
         auth,
         email,
-        password
+        password,
       );
 
       const user = userCredential?.user;
       if (!user || user.email !== email) return;
       setSuccess(true);
       navigate("/dashboard");
-      toast.success("Logged in successfully!");
+      if (success) {
+        toast.success("Logged in successfully!");
+      }
       setLoading(false);
-    } catch (error) {
-      // const errorCode = error.code;
-      // const errorMessage = error.message;
-      console.error(error);
-      toast.error("Invalid email or password!");
+    } catch{
+      if (error) {
+        toast.error("Invalid email or password!");
+      }
       setError(true);
-      setLoading(false)
+      setLoading(false);
     }
   };
   return (

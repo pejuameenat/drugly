@@ -111,6 +111,4 @@ const Nav = () => {
 };
 
 export default Nav;
-//for joiners
-// <button  className="flex w-full items-center justify-between border-b-[0.5px] py-2 last:border-b-0"
-// // onClick={() => setOpen(true)} ></button>
+ 

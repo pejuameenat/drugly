@@ -18,8 +18,7 @@ const ReusableHeader = ({
       <button
         type="button"
         className="bg-[#141414] p-2 text-white rounded-md text-[12px] lg:text-sm"
-        onClick={onClick}
-      >
+        onClick={onClick}>
         {buttonText}
       </button>
     </div>

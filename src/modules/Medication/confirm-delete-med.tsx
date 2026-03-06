@@ -41,7 +41,7 @@ const ConfirmDeleteMed = ({
       }`}
     >
       <h3 className="text-center">
-        Are you sure you want to delete {id} medication?
+        Are you sure you want to delete medication?
       </h3>
       <div className="flex justify-center items-center gap-4 pt-4">
         <button

@@ -82,17 +82,17 @@ const Medications = () => {
       />
       <MedicationForm
         showForm={overlayType}
-        setShowForm={() => setOverlayType("add")}
+        setShowForm={() => setOverlayType(null)}
       />
       <ConfirmDeleteMed
         deleteMed={overlayType}
-        setDeleteMed={() => setOverlayType("delete")}
+        setDeleteMed={() => setOverlayType(null)}
         id={selectedMed?.id}
       />
 
       <EditMedicationForm
         editMed={overlayType}
-        setEditMed={() => setOverlayType("edit")}
+        setEditMed={() => setOverlayType(null)}
         existingMed={selectedMed}
       />
     </>

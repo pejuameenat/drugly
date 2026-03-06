@@ -1,0 +1,14 @@
+// no entry fee, no prize
+    //entry fee, prize
+    //no entry fee , prize
+    //toggle for home and away in settings(✅ future)
+
+    //reword registration info to inform about when prize is not enough✅
+//disable start competition button when  members are not enough(Leave)
+//update format  and type on the drawers✅
+//rewrite hybrid (to group stage +knockout )✅
+//disable hybrid toggle on registration ✅
+//if entry fee is 0 and there is prize then don't show the checkbox✅
+//recalculation✅
+//show no pending members instead of nothing✅
+// //show text, that if  the person is going to  registration , give them the message that if the  prize is not enough then you will not be able to start the competition.✅

@@ -48,12 +48,6 @@ const MedDetails = ({
           >
             Take
           </button>
-          <button
-            type="button"
-            className="border py-px rounded-md  lg:w-[100px] min-w-20"
-          >
-            Snooze
-          </button>
         </div>
       </div>
     </div>
