@@ -13,7 +13,6 @@ const MedicationForm = ({
   showForm: string|null;
   setShowForm: (value: boolean) => void;
 }) => {
-  const [isActive, setIsActive] = useState(true)
   const [medName, setMedName] = useState("");
   const [medDose, setMedDose] = useState("");
   const [medInstructions, setMedInstructions] = useState("");
@@ -70,7 +69,7 @@ const MedicationForm = ({
       medStart,
       medEnddate,
       medNotes,
-      isActive
+      isActive:true
     });
   };
 

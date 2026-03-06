@@ -2,7 +2,6 @@ import { deleteDoc, doc } from "firebase/firestore";
 import { database } from "../../Firebase/config";
 import { toast } from "sonner";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import type { Medication } from "../../lib/type";
 
 interface ConfirmDeleteMedProps {
   id?: string;
