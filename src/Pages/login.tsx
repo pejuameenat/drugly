@@ -111,7 +111,7 @@ const Login = () => {
           <div className="p-3 rounded-md bg-[#E8F3FF] text-blue-600 text-[12px]">
             <strong>Demo Account</strong>
             <span className="block">
-              Use the pre-filled credentials to try the app with sample data.
+              Use demo email to try the app with sample data.
             </span>
           </div>
         </form>

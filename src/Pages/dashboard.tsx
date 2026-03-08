@@ -79,13 +79,13 @@ const Dashboard = () => {
             {/* <MedDetails overdue='bg-red-500 text-white' /> */}
           </div>
         </article>
-        <div className="bg-white rounded-md p-4 border border-[#bdbdbd] text-sm mt-4 lg:mt-0">
+        {/* <div className="bg-white rounded-md p-4 border border-[#bdbdbd] text-sm mt-4 lg:mt-0">
           <span className="font-semibold  ">Todays's Adherence</span>
           <span className="block font-semibold text-center pt-4 text-xl">25%</span>
           <span className="text-[#bdbdbd] text-[12px] text-center block pb-2">on Track</span>
           <div className="rounded-full h-1.5 bg-[#bdbdbd]"><div className="bg-[#141414] rounded-l-full h-full w-1/4"></div></div>
           <div className="text-[#bdbdbd] flex justify-between text-[12px] pt-2"><span>1 taken</span><span>3 remaining</span></div>
-        </div>
+        </div> */}
       </div>
     </div>
   );
