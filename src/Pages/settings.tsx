@@ -7,7 +7,9 @@ import { toast } from "sonner";
 const Settings = () => {
   const { user } = useAuth();
   const [displayName, setDisplayName] = useState<string>("");
-  const [email, setEmail]= useState('')
+  const [email, setEmail] = useState('')
+  
+  const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
   useEffect(() => {
     if (user) {
@@ -117,7 +119,7 @@ const Settings = () => {
           </label>
           <input
             type="text"
-            value="Africa/Lagos"
+            value={userTimeZone}
             disabled
             className="w-full cursor-not-allowed rounded-lg border border-gray-200 bg-gray-100 px-4 py-2.5 text-sm text-gray-600"
           />

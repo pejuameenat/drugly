@@ -26,5 +26,6 @@ export type CreateMedicationInput = {
   medStart: string;
   medEnddate?: string;
   medNotes?: string;
-  isActive:boolean
+  isActive: boolean;
+  isTaken: boolean;
 };

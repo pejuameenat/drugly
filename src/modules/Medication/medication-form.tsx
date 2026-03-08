@@ -69,7 +69,8 @@ const MedicationForm = ({
       medStart,
       medEnddate,
       medNotes,
-      isActive:true
+      isActive: true,
+      isTaken: false
     });
   };
 
