@@ -4,10 +4,8 @@ import { RiCapsuleLine } from "react-icons/ri";
 import { type Medication } from "../../lib/type";
 
 const MedDetails = ({
-  overdue,
   med,
 }: {
-  overdue?: string;
   med: Medication;
 }) => {
   const startDate = med?.medStart ? new Date(med.medStart) : null;
