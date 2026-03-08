@@ -10,6 +10,12 @@ const MedDetails = ({
   overdue?: string;
   med: Medication;
 }) => {
+  const startDate = med?.medStart ? new Date(med.medStart) : null;
+  const today = new Date();
+
+  const isMedUpcoming = startDate && startDate > today;
+  const isMedOverdue = startDate && startDate < today;
+
   return (
     <div className="flex items-center gap-3 rounded-md border border-[#bdbdbd] mt-4 p-3">
       <div className="bg-blue-50 w-10 h-10 rounded-full flex justify-center items-center">
@@ -27,8 +33,8 @@ const MedDetails = ({
           </strong>{" "}
           <span className="flex gap-0.5 items-center">
             <AiOutlineClockCircle />
-            {med.medInterval} {" "} {med.medInstructions}
-          </span> 
+            {med.medInterval} {med.medInstructions}
+          </span>
           <span className="flex gap-0.5 items-center text-overflow-ellipsis">
             <AiOutlineWarning />
             {med.medInteractions}
@@ -36,15 +42,17 @@ const MedDetails = ({
         </div>
         <div className="flex gap-1">
           <span
-            className={`${
-              overdue ?? "border"
-            } "py-px rounded-md min-w-20 lg:w-[100px] block text-center`}
+            className={`border ${isMedOverdue&&'border-red-500 text-red-500'} "py-px rounded-md min-w-20 lg:w-[100px] block text-center`}
           >
-            Upcoming
+            {isMedUpcoming
+              ? "Upcoming"
+              : isMedOverdue
+                ? "Overdue"
+                : "Due today"}
           </span>
           <button
             type="button"
-            className=" rounded-md py-px bg-[#141414] text-white min-w-20[ lg:w-[100px]"
+            className=" rounded-md py-px bg-[#141414] text-white min-w-20 [lg:w-[100px]"
           >
             Take
           </button>

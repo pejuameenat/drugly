@@ -42,9 +42,9 @@ const Dashboard = () => {
          Welcome <strong>{auth.currentUser?.displayName}</strong> , your medication overview for today
         </span>
       </div>
-      <div className="lg:grid lg:grid-cols-4 gap-4 ">
-        <article className="bg-white lg:col-span-3 rounded-md p-4 border border-[#bdbdbd]  max-w-full">
-          <div className="flex justify-between items-center  ">
+      <div className="lg:grid lg:grid-cols-4 gap-4">
+        <article className="bg-white lg:col-span-4 rounded-md p-4 border border-[#bdbdbd]  max-w-full">
+          <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-2 md:gap-0">
             <div className="text-sm">
               <strong className="block text-[#141414] font-medium">
                 Today's Medication
@@ -56,7 +56,7 @@ const Dashboard = () => {
             </div>
             <Link
               to="/medications"
-              className="bg-[#141414] p-2 text-white rounded-md text-[12px] lg:text-sm"
+              className="bg-[#141414] p-2 text-white rounded-md text-[12px] lg:text-sm w-fit"
             >
               + Add Medication
             </Link>
