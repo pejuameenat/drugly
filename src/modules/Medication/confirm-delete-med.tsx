@@ -35,7 +35,7 @@ const ConfirmDeleteMed = ({
 
   return (
     <div
-      className={`fixed top-1/2 left-1/2 w-[400px] -translate-x-1/2 -translate-y-1/2 bg-white rounded-sm p-6 shadow-lg max-w-full overflow-y-auto max-h-[90vh] z-10 ${
+      className={`fixed top-1/2 left-1/2 lg:w-[400px] -translate-x-1/2 -translate-y-1/2 bg-white rounded-sm p-6 shadow-lg max-w-full overflow-y-auto max-h-[90vh] z-10 ${
         deleteMed === "delete" ? "visible" : "invisible"
       }`}
     >
