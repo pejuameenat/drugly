@@ -59,7 +59,10 @@ const MedHistory = ({
                 <FiEdit />
                 Edit
               </button>{" "}
-              <button type="button" onClick={() => setDeleteMed(Boolean('delete'))}>
+              <button type="button" onClick={() => {
+                setDeleteMed(Boolean('delete'))
+                setSelectedMed(med)
+              }}>
                 <FiTrash2 className="text-red-700" />
               </button>
             </div>

@@ -51,7 +51,7 @@ const Dashboard = () => {
               </strong>
               <span className="text-[12px]">1 of 4 taken </span>
               <span className="text-[12px]">
-                • Next: Lisinopril at 08:00 AM
+                • Next: pyriton at 08:00 AM
               </span>
             </div>
             <Link
@@ -76,7 +76,6 @@ const Dashboard = () => {
                     </article>
                   )}
           <div>
-            {/* <MedDetails overdue='bg-red-500 text-white' /> */}
           </div>
         </article>
         {/* <div className="bg-white rounded-md p-4 border border-[#bdbdbd] text-sm mt-4 lg:mt-0">

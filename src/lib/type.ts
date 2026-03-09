@@ -11,7 +11,8 @@ export type Medication = {
   medEnddate?: string;
   medStart?: string;
   medNotes?: string;
-  createdAt?: any;  
+  createdAt?: any; 
+  isTaken: boolean;
   
 };
 

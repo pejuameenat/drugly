@@ -5,8 +5,8 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 interface ConfirmDeleteMedProps {
   id?: string;
-  deleteMed: string|null;
-  setDeleteMed: (value:boolean) => void;
+  deleteMed: string | null;
+  setDeleteMed: (value: boolean) => void;
 }
 
 const ConfirmDeleteMed = ({
@@ -36,7 +36,7 @@ const ConfirmDeleteMed = ({
   return (
     <div
       className={`fixed top-1/2 left-1/2 w-[400px] -translate-x-1/2 -translate-y-1/2 bg-white rounded-sm p-6 shadow-lg max-w-full overflow-y-auto max-h-[90vh] z-10 ${
-        deleteMed==='delete' ? "visible" : "invisible"
+        deleteMed === "delete" ? "visible" : "invisible"
       }`}
     >
       <h3 className="text-center">
@@ -53,7 +53,7 @@ const ConfirmDeleteMed = ({
         <button
           type="button"
           className="rounded-md p-1 bg-red-600 text-white w-20"
-          onClick={() => deleteMedMutation(id??'')}
+          onClick={() => deleteMedMutation(id ?? "")}
           disabled={isPending}
         >
           {isPending ? "Deleting..." : "Delete"}
