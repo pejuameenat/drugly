@@ -77,8 +77,8 @@ const MedDetails = ({ med }: { med: Medication }) => {
           ) : null}
           <button
             type="button"
-            className=" rounded-md py-px bg-[#141414] text-white min-w-20 [lg:w-[100px]"
-            disabled={isPending}
+            className={`rounded-md py-px bg-[#141414] text-white min-w-20 [lg:w-[100px] ${med?.isTaken||isMedUpcoming ? "cursor-not-allowed opacity-50" : "hover:bg-[#333]"}`}
+            disabled={isPending || isMedUpcoming||med?.isTaken}
             onClick={() => takeMed()}
           >
             {isPending ? (
