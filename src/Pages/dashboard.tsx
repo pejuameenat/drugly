@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { useMemo } from "react";
 import MedDetails from '../modules/dashboard/details'
 import { auth } from '../Firebase/config'
 import { fetchMedications } from "../lib/utilqueries.ts/medicationquery";
@@ -18,7 +19,27 @@ const Dashboard = () => {
     queryFn: () => fetchMedications(userId!),
     enabled: !!userId||!loading,
   });
-  console.log(medications);
+
+  const todaysMedications = useMemo(() => 
+   medications?.filter((med) => {
+      return new Date(med?.medStart ?? '').toDateString() === new Date().toDateString() || med?.createdAt?.toDate().toDateString() === new Date().toDateString()
+    })
+    , [medications])
+  
+  const takenMedications = useMemo(() => 
+   todaysMedications?.filter((med) => {
+      return  med?.isTaken === true
+    })
+    , [todaysMedications])
+  
+   const notTakenMedications = useMemo(() => 
+   todaysMedications?.filter((med) => {
+      return  med?.isTaken === false
+    })
+     , [todaysMedications])
+  
+  //use interval and updatedAt to determine next medication and time until next medication
+  
  if (isLoading) {
     return (
       <div className="flex justify-center items-center h-screen">
@@ -49,9 +70,9 @@ const Dashboard = () => {
               <strong className="block text-[#141414] font-medium">
                 Today's Medication
               </strong>
-              <span className="text-[12px]">1 of 4 taken </span>
+              <span className="text-[12px]">{takenMedications?.length } of {todaysMedications?.length} taken </span>
               <span className="text-[12px]">
-                • Next: pyriton at 08:00 AM
+                • Next: {notTakenMedications[0]?.medName} at  {notTakenMedications[0]?.medInterval}
               </span>
             </div>
             <Link
@@ -62,15 +83,15 @@ const Dashboard = () => {
             </Link>
           </div>
 
-            {medications.length === 0 ? (
+            {todaysMedications.length === 0 ? (
                     <div className="flex  flex-col items-center justify-center h-screen text-gray-600">
                       <Package size={100} />
-                      <span>You have not added any medications yet.</span>
+                      <span>You don't have any medications for today.</span>
                     </div>
                   ) : (
                     <article className="pt-4 flex flex-col  gap-5">
                       {/* items */}
-                      {medications?.map((med) => {
+                      {todaysMedications?.map((med) => {
                         return <MedDetails med={ med} key={med?.id} />
                       })}
                     </article>

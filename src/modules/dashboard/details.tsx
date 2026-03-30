@@ -13,8 +13,10 @@ const MedDetails = ({ med }: { med: Medication }) => {
   const startDate = med?.medStart ? new Date(med.medStart) : null;
   const today = new Date();
 
-  const isMedUpcoming = startDate && startDate > today;
-  const isMedOverdue = startDate && startDate < today;
+  const isSameDay = startDate?.toDateString() === today.toDateString();
+
+  const isMedUpcoming = startDate && startDate > today && !isSameDay;
+  const isMedOverdue = startDate && startDate < today && !isSameDay;
 
   const { userId } = useAuth();
   const queryClient = useQueryClient();
@@ -23,6 +25,7 @@ const MedDetails = ({ med }: { med: Medication }) => {
       await updateDoc(doc(database, "medications", med?.id ?? ""), {
         userId,
         isTaken: true,
+        updatedAt: new Date().toISOString(),
       });
     },
     onSuccess: () => {
@@ -81,7 +84,7 @@ const MedDetails = ({ med }: { med: Medication }) => {
             {isPending ? (
               <div className="flex gap-1 items-center">
                 Take
-                <Loader2  className="h-4 w-4 animate-spin" />
+                <Loader2 className="h-4 w-4 animate-spin" />
               </div>
             ) : med?.isTaken ? (
               "Taken"

@@ -13,6 +13,7 @@ export type Medication = {
   medNotes?: string;
   createdAt?: any; 
   isTaken: boolean;
+  updatedAt?: string;
   
 };
 
