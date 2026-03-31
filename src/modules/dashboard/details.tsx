@@ -15,8 +15,8 @@ const MedDetails = ({ med }: { med: Medication }) => {
 
   const isSameDay = startDate?.toDateString() === today.toDateString();
 
-  const isMedUpcoming = startDate && startDate > today && !isSameDay;
-  const isMedOverdue = startDate && startDate < today && !isSameDay;
+  const isMedUpcoming = startDate && startDate > today && !isSameDay &&!med?.isTaken;
+  const isMedOverdue = startDate && startDate < today && !isSameDay &&!med?.isTaken;
 
   const { userId } = useAuth();
   const queryClient = useQueryClient();
