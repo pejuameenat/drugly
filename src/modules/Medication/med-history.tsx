@@ -16,7 +16,7 @@ const MedHistory = ({
 }) => {
   return (
     <>
-      <div className="bg-white rounded-md border border-[#bdbdbd] p-5 md:w-[33%]">
+      <div className="bg-white rounded-md border border-[#bdbdbd] p-5">
         <div className="text-[12px]">
           <div className="flex gap-3 items-center">
             <div className="bg-blue-50 w-8 h-8 rounded-full flex justify-center items-center">

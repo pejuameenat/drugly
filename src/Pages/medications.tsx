@@ -60,7 +60,7 @@ const Medications = () => {
             <span>You have not added any medications yet.</span>
           </div>
         ) : (
-          <article className="pt-4 flex flex-col md:flex-row gap-5">
+          <article className="pt-4 grid grid-cols-1 md:grid-cols-3 gap-5">
             {/* items */}
             {medications?.map((med) => {
               return (

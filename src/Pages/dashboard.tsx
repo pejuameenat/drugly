@@ -48,6 +48,11 @@ const Dashboard = () => {
     [todaysMedications],
   );
 
+  // const calculateAdherencePercentage = takenMedications
+  const adherencePercentage =
+    todaysMedications?.length > 0
+      ? (takenMedications?.length / todaysMedications?.length) * 100
+      : 0;
   //use interval and updatedAt to determine next medication and time until next medication
 
   if (isLoading) {
@@ -75,7 +80,7 @@ const Dashboard = () => {
         </span>
       </div>
       <div className="lg:grid lg:grid-cols-4 gap-4">
-        <article className="bg-white lg:col-span-4 rounded-md p-4 border border-[#bdbdbd]  max-w-full">
+        <article className="bg-white lg:col-span-3 rounded-md p-4 border border-[#bdbdbd]  max-w-full">
           <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-2 md:gap-0">
             <div className="text-sm">
               <strong className="block text-[#141414] font-medium">
@@ -108,22 +113,33 @@ const Dashboard = () => {
               <span>You don't have any medications for today.</span>
             </div>
           ) : (
-            <article className="pt-4 flex flex-col  gap-5">
+            <article className="pt-4 flex flex-col gap-5">
               {/* items */}
               {todaysMedications?.map((med) => {
                 return <MedDetails med={med} key={med?.id} />;
               })}
             </article>
           )}
-          <div></div>
         </article>
-        {/* <div className="bg-white rounded-md p-4 border border-[#bdbdbd] text-sm mt-4 lg:mt-0">
+        <div className="bg-white rounded-md p-4 border border-[#bdbdbd] text-sm mt-4 lg:mt-0">
           <span className="font-semibold  ">Todays's Adherence</span>
-          <span className="block font-semibold text-center pt-4 text-xl">25%</span>
-          <span className="text-[#bdbdbd] text-[12px] text-center block pb-2">on Track</span>
-          <div className="rounded-full h-1.5 bg-[#bdbdbd]"><div className="bg-[#141414] rounded-l-full h-full w-1/4"></div></div>
-          <div className="text-[#bdbdbd] flex justify-between text-[12px] pt-2"><span>1 taken</span><span>3 remaining</span></div>
-        </div> */}
+          <span className="block font-semibold text-center pt-4 text-xl">
+            {adherencePercentage}%
+          </span>
+          <span className="text-[#bdbdbd] text-[12px] text-center block pb-2">
+            {adherencePercentage > 20 ? "on Track" : adherencePercentage === 0 ? "No Meds" : "Needs Improvement"}
+          </span>
+          <div className="rounded-full h-1.5 bg-[#bdbdbd]">
+            <div
+              className="bg-[#141414] rounded-l-full h-full"
+              style={{ width: `${adherencePercentage}%` }}
+            ></div>
+          </div>
+          <div className="text-[#bdbdbd] flex justify-between text-[12px] pt-2">
+            <span>{takenMedications?.length} taken</span>
+            <span>{notTakenMedications?.length} remaining</span>
+          </div>
+        </div>
       </div>
     </div>
   );
