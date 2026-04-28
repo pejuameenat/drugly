@@ -71,7 +71,7 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="lg:ml-52 pt-18 lg:pt-14 px-4">
+    <div className="lg:ml-52 pt-18 lg:pt-14 px-4  ">
       <div className="pb-8 ">
         <h1 className="text-xl lg:text-3xl font-semibold">Dashboard</h1>
         <span className="text[12px] text-[#141414]">
@@ -79,7 +79,7 @@ const Dashboard = () => {
           medication overview for today
         </span>
       </div>
-      <div className="lg:grid lg:grid-cols-4 gap-4">
+      <div className="lg:grid lg:grid-cols-4 gap-4 items-start">
         <article className="bg-white lg:col-span-3 rounded-md p-4 border border-[#bdbdbd]  max-w-full">
           <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-2 md:gap-0">
             <div className="text-sm">
@@ -89,11 +89,11 @@ const Dashboard = () => {
               {todaysMedications?.length > 0 && (
                 <>
                   <span className="text-[12px]">
-                    {takenMedications?.length} of {todaysMedications?.length}{" "}
-                    taken{" "}
+                    {takenMedications?.length} of {todaysMedications?.length}{' '}
+                    taken{' '}
                   </span>
                   <span className="text-[12px]">
-                    • Next: {notTakenMedications[0]?.medName} at{" "}
+                    • Next: {notTakenMedications[0]?.medName} at{' '}
                     {notTakenMedications[0]?.medInterval}
                   </span>
                 </>
@@ -116,7 +116,7 @@ const Dashboard = () => {
             <article className="pt-4 flex flex-col gap-5">
               {/* items */}
               {todaysMedications?.map((med) => {
-                return <MedDetails med={med} key={med?.id} />;
+                return <MedDetails med={med} key={med?.id} />
               })}
             </article>
           )}
@@ -127,7 +127,11 @@ const Dashboard = () => {
             {adherencePercentage}%
           </span>
           <span className="text-[#bdbdbd] text-[12px] text-center block pb-2">
-            {adherencePercentage > 20 ? "on Track" : adherencePercentage === 0 ? "No Meds" : "Needs Improvement"}
+            {adherencePercentage > 20
+              ? 'on Track'
+              : adherencePercentage === 0
+                ? 'No Meds'
+                : 'Needs Improvement'}
           </span>
           <div className="rounded-full h-1.5 bg-[#bdbdbd]">
             <div
@@ -142,7 +146,7 @@ const Dashboard = () => {
         </div>
       </div>
     </div>
-  );
+  )
 };
 
 export default Dashboard;
