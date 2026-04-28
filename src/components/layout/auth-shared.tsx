@@ -4,9 +4,7 @@ import { RiCapsuleLine } from "react-icons/ri";
 import { useLocation } from "react-router-dom";
 
 const AuthShared = ({ children }: { children: ReactNode }) => {
-
   const currentPage = useLocation() 
-  
   
   return (
     <section className="flex flex-col items-center justify-center w-full lg:min-h-screen">

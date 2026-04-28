@@ -23,11 +23,11 @@ const Dashboard = () => {
   const todaysMedications = useMemo(
     () =>
       medications?.filter((med) => {
-        return (
-          new Date(med?.medStart ?? "").toDateString() ===
-            new Date().toDateString() ||
-          med?.createdAt?.toDate().toDateString() === new Date().toDateString()
-        );
+        const createdOrStartsToday =  new Date(med?.medStart ?? "").toDateString() ===
+        new Date().toDateString() ||
+        med?.createdAt?.toDate().toDateString() === new Date().toDateString()
+        return createdOrStartsToday && med?.isTaken === false;
+        
       }),
     [medications],
   );
