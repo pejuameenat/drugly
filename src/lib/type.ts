@@ -14,7 +14,7 @@ export type Medication = {
   createdAt?: any; 
   isTaken: boolean;
   updatedAt?: string;
-  
+  // reminderMins?: number;
 };
 
 export type CreateMedicationInput = {
@@ -30,4 +30,5 @@ export type CreateMedicationInput = {
   medNotes?: string;
   isActive: boolean;
   isTaken: boolean;
+  reminderMins?: number;
 };

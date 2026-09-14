@@ -47,6 +47,7 @@ const Dashboard = () => {
       }),
     [todaysMedications],
   );
+  console.log(notTakenMedications)
 
   // const calculateAdherencePercentage = takenMedications
   const adherencePercentage =
@@ -75,7 +76,7 @@ const Dashboard = () => {
       <div className="pb-8 ">
         <h1 className="text-xl lg:text-3xl font-semibold">Dashboard</h1>
         <span className="text[12px] text-[#141414]">
-          Welcome <strong>{auth.currentUser?.displayName}</strong> , your
+          Welcome <strong>{auth.currentUser?.displayName}</strong>, your
           medication overview for today
         </span>
       </div>
@@ -93,7 +94,7 @@ const Dashboard = () => {
                     taken{' '}
                   </span>
                   <span className="text-[12px]">
-                    • Next: {notTakenMedications[0]?.medName} at{' '}
+                    • Next: {notTakenMedications[0]?.medName} to be taken{' '}
                     {notTakenMedications[0]?.medInterval}
                   </span>
                 </>
@@ -130,7 +131,7 @@ const Dashboard = () => {
             {adherencePercentage > 20
               ? 'on Track'
               : adherencePercentage === 0
-                ? 'No Meds'
+                ? 'You have not taken any medication today'
                 : 'Needs Improvement'}
           </span>
           <div className="rounded-full h-1.5 bg-[#bdbdbd]">

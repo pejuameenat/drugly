@@ -1,25 +1,19 @@
 import { RiCapsuleLine } from "react-icons/ri";
 import { FiHome, FiSettings, FiLogOut, FiMenu, FiX } from "react-icons/fi";
-import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
-import { useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { useState,  } from "react";
+import { useLocation, useNavigate } from 'react-router-dom'
 import UniversalOverlay from "../../components/layout/universal-overlay";
-import { auth } from "../../Firebase/config";
-import { signOut } from "firebase/auth";
-import { useAuth } from "../../Firebase/auth-context";
+import { useAuth} from "../../Firebase/auth-context";
 
 const Nav = () => {
   const currentLink = useLocation().pathname;
   const [isOpen, setIsOpen] = useState(false);
-  const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, logOut } = useAuth();
+  const navigate = useNavigate()
   const handleLogout = async () => {
-    try {
-      await signOut(auth);
-      navigate("/");
-    } catch (error) {
-      console.error(error);
-    }
+  logOut();
+  navigate('/')
   };
 
   return (

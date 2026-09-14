@@ -2,7 +2,7 @@ import ReusableHeader from "../modules/Medication/reusable-header";
 import MedHistory from "../modules/Medication/med-history";
 import MedicationForm from "../modules/Medication/medication-form";
 import { useState } from "react";
-import UniversalOverlay from "../components/universal-overlay";
+import UniversalOverlay from "../components/layout/universal-overlay";
 import { Loader2, Package } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { fetchMedications } from "../lib/utilqueries.ts/medicationquery";
@@ -77,8 +77,8 @@ const Medications = () => {
         )}
       </section>
       <UniversalOverlay
-        overlay={overlayType !== null}
-        setOverlay={() => setOverlayType(null)}
+        isOpen={overlayType !== null}
+        setIsOpen={() => setOverlayType(null)}
       />
       <MedicationForm
         showForm={overlayType}

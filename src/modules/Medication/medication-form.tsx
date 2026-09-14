@@ -70,7 +70,8 @@ const MedicationForm = ({
       medEnddate,
       medNotes,
       isActive: true,
-      isTaken: false
+      isTaken: false,
+      reminderMins:10,
     });
   };
 
