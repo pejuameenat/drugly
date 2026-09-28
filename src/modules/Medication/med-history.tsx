@@ -4,7 +4,7 @@ import { FiEdit, FiTrash2 } from "react-icons/fi";
 import { type Medication } from "../../lib/type";
 
 //TODO
-//allow keyboard users tab into med box to nteract with it to improve UX
+//allow keyboard users tab into med box to interact with it to improve UX
 const MedHistory = ({
   setDeleteMed,
   setEditMed,
@@ -60,7 +60,7 @@ const MedHistory = ({
               >
                 <FiEdit />
                 Edit
-              </button>{" "}
+              </button>
               <button type="button" onClick={() => {
                 setDeleteMed(Boolean('delete'))
                 setSelectedMed(med)

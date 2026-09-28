@@ -12,7 +12,7 @@ const EditMedicationForm = ({
   setEditMed,
   existingMed,
 }: {
-  editMed: string|null;
+  editMed:string|null|boolean;
   setEditMed: (value: boolean) => void;
   existingMed: Medication|null;
 }) => {
@@ -40,6 +40,8 @@ const EditMedicationForm = ({
       setMedInstructions(existingMed.medInstructions)
   }
   }, [existingMed])
+
+  console.log(existingMed)      
 
   const queryClient = useQueryClient();
   const { userId } = useAuth();

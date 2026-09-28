@@ -6,7 +6,7 @@ const UniversalOverlay = ({
   setIsOpen: (value:boolean) => void;
 }) => {
   return (
-    <>{isOpen ? <div className="fixed inset-0 bg-black/40" onClick={()=>setIsOpen(false)}></div> : null}</>
+    <>{isOpen ? <div className="fixed inset-0  z-5 bg-black/40" onClick={()=>setIsOpen(false)}></div> : null}</>
   );
 };
 

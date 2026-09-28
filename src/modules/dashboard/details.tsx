@@ -1,43 +1,46 @@
-import { AiOutlineClockCircle } from "react-icons/ai";
-import { AiOutlineWarning } from "react-icons/ai";
-import { RiCapsuleLine } from "react-icons/ri";
-import { type Medication } from "../../lib/type";
-import { database } from "../../Firebase/config";
-import { updateDoc, doc } from "firebase/firestore";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useAuth } from "../../Firebase/auth-context";
-import { toast } from "sonner";
-import { Loader2 } from "lucide-react";
+import { AiOutlineClockCircle } from 'react-icons/ai'
+import { AiOutlineWarning } from 'react-icons/ai'
+import { RiCapsuleLine } from 'react-icons/ri'
+import { type Medication } from '../../lib/type'
+import { database } from '../../Firebase/config'
+import { updateDoc, doc } from 'firebase/firestore'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useAuth } from '../../Firebase/auth-context'
+import { toast } from 'sonner'
+import { Loader2 } from 'lucide-react'
+import { FiEdit } from 'react-icons/fi'
 
-const MedDetails = ({ med }: { med: Medication }) => {
-  const startDate = med?.medStart ? new Date(med.medStart) : null;
-  const today = new Date();
+const MedDetails = ({ med, setIsOpen }: {setIsOpen:(value:Medication)=>void, med: Medication }) => {
+  const startDate = med?.medStart ? new Date(med.medStart) : null
+  const today = new Date()
 
-  const isSameDay = startDate?.toDateString() === today.toDateString();
+  const isSameDay = startDate?.toDateString() === today.toDateString()
 
-  const isMedUpcoming = startDate && startDate > today && !isSameDay &&!med?.isTaken;
-  const isMedOverdue = startDate && startDate < today && !isSameDay &&!med?.isTaken;
+  const isMedUpcoming =
+    startDate && startDate > today && !isSameDay && !med?.isTaken
+  const isMedOverdue =
+    startDate && startDate < today && !isSameDay && !med?.isTaken
 
-  const { userId } = useAuth();
-  const queryClient = useQueryClient();
+  const { userId } = useAuth()
+  const queryClient = useQueryClient()
   const { mutate: takeMed, isPending } = useMutation({
     mutationFn: async () => {
-      await updateDoc(doc(database, "medications", med?.id ?? ""), {
+      await updateDoc(doc(database, 'medications', med?.id ?? ''), {
         userId,
         isTaken: true,
         updatedAt: new Date().toISOString(),
-      });
+      })
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ["medications"],
-      });
+        queryKey: ['medications'],
+      })
     },
     onError: (error) => {
-      console.error(error);
-      toast.error("Error editing medication");
+      console.error(error)
+      toast.error('Error editing medication')
     },
-  });
+  })
 
   return (
     <div className="flex items-center gap-3 rounded-md border border-[#bdbdbd] mt-4 p-3">
@@ -45,40 +48,45 @@ const MedDetails = ({ med }: { med: Medication }) => {
         <RiCapsuleLine className="text-blue-500" />
       </div>
       <div className="flex flex-col lg:flex-row justify-between gap-3 lg:gap-0 lg:items-center flex-1">
-        <div className="text-[12px]">
-          <strong>
-            {med.medName}{" "}
-            <span>
-              {" "}
-              {med?.medDose}
-              {med?.medUnit}
-            </span>{" "}
-          </strong>{" "}
-          <span className="flex gap-0.5 items-center">
-            <AiOutlineClockCircle />
-            {med.medInterval} {med.medInstructions}
-          </span>
-          <span className="flex gap-0.5 items-center text-overflow-ellipsis">
-            <AiOutlineWarning />
-            {med.medInteractions}
-          </span>{" "}
+        <div className="text-[12px] flex justify-between gap-6">
+          <div>
+            <strong>
+              {med.medName}{' '}
+              <span>
+                {' '}
+                {med?.medDose}
+                {med?.medUnit}
+              </span>{' '}
+            </strong>{' '}
+            <span className="flex gap-0.5 items-center">
+              <AiOutlineClockCircle />
+              {med.medInterval} {med.medInstructions}
+            </span>
+            <span className="flex gap-0.5 items-center text-overflow-ellipsis">
+              <AiOutlineWarning />
+              {med.medInteractions}
+            </span>{' '}
+          </div>
+          <button type="button" onClick={()=>setIsOpen(med)}>
+           <FiEdit className='text-lg'/>
+          </button>
         </div>
         <div className="flex gap-1">
           {!med?.isTaken ? (
             <span
-              className={`border ${isMedOverdue && "border-red-500 text-red-500"} "py-px rounded-md min-w-20 lg:w-[100px] block text-center`}
+              className={`border ${isMedOverdue && 'border-red-500 text-red-500'} "py-px rounded-md min-w-20 lg:w-[100px] block text-center`}
             >
               {isMedUpcoming
-                ? "Upcoming"
+                ? 'Upcoming'
                 : isMedOverdue
-                  ? "Overdue"
-                  : "Due today"}
+                  ? 'Overdue'
+                  : 'Due today'}
             </span>
           ) : null}
           <button
             type="button"
-            className={`rounded-md py-px bg-[#141414] text-white min-w-20 [lg:w-[100px] ${med?.isTaken||isMedUpcoming ? "cursor-not-allowed opacity-50" : "hover:bg-[#333]"}`}
-            disabled={isPending || isMedUpcoming||med?.isTaken}
+            className={`rounded-md py-px bg-[#141414] text-white min-w-20 [lg:w-[100px] ${med?.isTaken || isMedUpcoming ? 'cursor-not-allowed opacity-50' : 'hover:bg-[#333]'}`}
+            disabled={isPending || isMedUpcoming || med?.isTaken}
             onClick={() => takeMed()}
           >
             {isPending ? (
@@ -87,15 +95,15 @@ const MedDetails = ({ med }: { med: Medication }) => {
                 <Loader2 className="h-4 w-4 animate-spin" />
               </div>
             ) : med?.isTaken ? (
-              "Taken"
+              'Taken'
             ) : (
-              "Take"
+              'Take'
             )}
           </button>
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default MedDetails;
+export default MedDetails
