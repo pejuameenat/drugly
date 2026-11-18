@@ -2,6 +2,7 @@ import { deleteDoc, doc } from "firebase/firestore";
 import { database } from "../../Firebase/config";
 import { toast } from "sonner";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 
 interface ConfirmDeleteMedProps {
   id?: string;
@@ -15,13 +16,14 @@ const ConfirmDeleteMed = ({
   setDeleteMed,
 }: ConfirmDeleteMedProps) => {
   const queryClient = useQueryClient();
+  const {t} = useTranslation()
 
   const { mutate: deleteMedMutation, isPending } = useMutation({
     mutationFn: async (medId: string) => {
       await deleteDoc(doc(database, "medications", medId));
     },
     onSuccess: () => {
-      toast.success("Medication deleted successfully");
+      toast.success(t("delMedSuccess"));
       queryClient.invalidateQueries({
         queryKey: ["medications"],
       });
@@ -29,7 +31,7 @@ const ConfirmDeleteMed = ({
     },
     onError: (error) => {
       console.error(error);
-      toast.error("Error deleting medication");
+      toast.error(t("delMedError"));
     },
   });
 
@@ -40,7 +42,7 @@ const ConfirmDeleteMed = ({
       }`}
     >
       <h3 className="text-center">
-        Are you sure you want to delete medication?
+        {t("deleteMed")}
       </h3>
       <div className="flex justify-center items-center gap-4 pt-4">
         <button
@@ -48,15 +50,15 @@ const ConfirmDeleteMed = ({
           className="rounded-md p-1 border lg:w-20"
           onClick={() => setDeleteMed(false)}
         >
-          Cancel
+          {t("cancel")}
         </button>
         <button
           type="button"
-          className="rounded-md p-1 bg-red-600 text-white w-20"
+          className="rounded-md p-1 bg-red-600 text-white w-20 hover:opacity-50"
           onClick={() => deleteMedMutation(id ?? "")}
           disabled={isPending}
         >
-          {isPending ? "Deleting..." : "Delete"}
+          {isPending ? <span>{t("deleting")}</span>  : <span>{t("delete")}</span>}
         </button>
       </div>
     </div>

@@ -1,63 +1,65 @@
-import ReusableHeader from "../modules/Medication/reusable-header";
-import MedHistory from "../modules/Medication/med-history";
-import MedicationForm from "../modules/Medication/medication-form";
-import { useState } from "react";
-import UniversalOverlay from "../components/layout/universal-overlay";
-import { Loader2, Package } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
-import { fetchMedications } from "../lib/utilqueries.ts/medicationquery";
-import { useAuth } from "../Firebase/auth-context";
-import { type Medication } from "../lib/type";
-import ConfirmDeleteMed from "../modules/Medication/confirm-delete-med";
-import EditMedicationForm from "../modules/Medication/edit-medication";
+import ReusableHeader from '../modules/Medication/reusable-header'
+import MedHistory from '../modules/Medication/med-history'
+import MedicationForm from '../modules/Medication/medication-form'
+import { useState } from 'react'
+import UniversalOverlay from '../components/layout/universal-overlay'
+import { Loader2, Package } from 'lucide-react'
+import { useQuery } from '@tanstack/react-query'
+import { fetchMedications } from '../lib/utilqueries.ts/medicationquery'
+import { useAuth } from '../Firebase/auth-context'
+import { type Medication } from '../lib/type'
+import ConfirmDeleteMed from '../modules/Medication/confirm-delete-med'
+import EditMedicationForm from '../modules/Medication/edit-medication'
+import { useTranslation } from 'react-i18next'
 
 const Medications = () => {
   const [overlayType, setOverlayType] = useState<
-    "add" | "edit" | "delete" | null
-  >(null);
-  const [selectedMed, setSelectedMed] = useState<Medication | null>(null);
+    'add' | 'edit' | 'delete' | null
+  >(null)
+  const [selectedMed, setSelectedMed] = useState<Medication | null>(null)
+  const { t } = useTranslation()
 
-  const { userId, loading } = useAuth();
+  const { userId, loading } = useAuth()
 
   const {
     data: medications = [],
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ["medications", userId],
+    queryKey: ['medications', userId],
     queryFn: () => fetchMedications(userId!),
     enabled: !!userId || !loading,
-  });
+  })
 
   if (isLoading) {
     return (
       <div className="flex justify-center items-center h-screen">
         <Loader2 size={40} className="animate-spin" />
       </div>
-    );
+    )
   }
   if (isError) {
     return (
       <div className="flex justify-center items-center h-screen text-red-600 text-4xl">
-        Error
+        {t('error')}
       </div>
-    );
+    )
   }
 
   return (
     <>
       <section className="lg:ml-52 pt-18 lg:pt-14 px-4">
         <ReusableHeader
-          heading="Medications"
-          text="   Manage your medication schedule"
-          buttonText="+ Add Medication"
-          onClick={() => setOverlayType("add")}
+          heading={t('meds')}
+          text={t('manageMedSchedule')}
+          buttonText={`+ ${t('addMedication')} `}
+          onClick={() => setOverlayType('add')}
         />
 
         {medications.length === 0 ? (
           <div className="flex  flex-col items-center justify-center h-screen text-gray-600">
             <Package size={100} />
-            <span>You have not added any medications yet.</span>
+            <span>{t('added')}</span>
           </div>
         ) : (
           <article className="pt-4 grid grid-cols-1 md:grid-cols-3 gap-5">
@@ -67,11 +69,11 @@ const Medications = () => {
                 <MedHistory
                   key={med?.id}
                   med={med}
-                  setDeleteMed={() => setOverlayType("delete")}
-                  setEditMed={() => setOverlayType("edit")}
+                  setDeleteMed={() => setOverlayType('delete')}
+                  setEditMed={() => setOverlayType('edit')}
                   setSelectedMed={setSelectedMed}
                 />
-              );
+              )
             })}
           </article>
         )}
@@ -96,7 +98,7 @@ const Medications = () => {
         existingMed={selectedMed}
       />
     </>
-  );
-};
+  )
+}
 
-export default Medications;
+export default Medications

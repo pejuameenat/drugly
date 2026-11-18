@@ -5,6 +5,7 @@ import { useState,  } from "react";
 import { useLocation, useNavigate } from 'react-router-dom'
 import UniversalOverlay from "../../components/layout/universal-overlay";
 import { useAuth} from "../../Firebase/auth-context";
+import { useTranslation } from "react-i18next";
 
 const Nav = () => {
   const currentLink = useLocation().pathname;
@@ -16,6 +17,7 @@ const Nav = () => {
   navigate('/')
   };
 
+  const {t} = useTranslation()
   return (
     <div>
       <nav className="lg:hidden flex items-center gap-4 fixed top-0 left-0 right-0 bg-white shadow-sm p-3">
@@ -24,7 +26,7 @@ const Nav = () => {
         </button>
         <div className="flex gap-1 items-center    px-2">
           <RiCapsuleLine size={30} className="text-blue-600" />
-          MedTracker
+        {t("medTracker")}
         </div>
       </nav>
       {/* sidebar */}
@@ -38,7 +40,7 @@ const Nav = () => {
           <div className="flex justify-between items-center py-4 border-b border-[#BDBDBD] px-2 ">
             <menu className="flex gap-1 items-center">
               <RiCapsuleLine size={24} className="text-blue-600" />
-              MedTracker
+              {t('medTracker')}
             </menu>
             <button
               type="button"
@@ -58,7 +60,7 @@ const Nav = () => {
                 <FiHome />
                 <Link to="/dashboard" className="w-full">
                   {" "}
-                  Dashboard
+                  {t("dashboard")}
                 </Link>
               </li>
               <li
@@ -69,7 +71,7 @@ const Nav = () => {
                 {" "}
                 <RiCapsuleLine />
                 <Link to="/medications" className="w-full">
-                  Medications
+                  {t("meds")}
                 </Link>
               </li>
               <li
@@ -79,7 +81,7 @@ const Nav = () => {
               >
                 <FiSettings />
                 <Link to="/settings" className="w-full">
-                  Settings
+                {t("settings")}
                 </Link>
               </li>
             </ul>

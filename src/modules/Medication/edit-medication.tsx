@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { type Medication } from "../../lib/type";
 import { useAuth } from "../../Firebase/auth-context";
+import { useTranslation } from "react-i18next";
 
 const EditMedicationForm = ({
   editMed,
@@ -27,6 +28,8 @@ const EditMedicationForm = ({
   const [medEnddate, setMedEnddate] = useState<string|undefined>( "");
   const [customMed, setCustomMed] = useState<string | undefined>("");
 
+  const {t} = useTranslation()
+
   useEffect(() => {
     if (existingMed) {
     setMedNotes(existingMed.medNotes)
@@ -40,8 +43,6 @@ const EditMedicationForm = ({
       setMedInstructions(existingMed.medInstructions)
   }
   }, [existingMed])
-
-  console.log(existingMed)      
 
   const queryClient = useQueryClient();
   const { userId } = useAuth();
@@ -70,7 +71,7 @@ const EditMedicationForm = ({
     },
     onError: (error) => {
       console.error(error);
-      toast.error("Error editing medication");
+      toast.error(t("editMedError"));
     },
   });
 
@@ -83,11 +84,11 @@ const EditMedicationForm = ({
     <>
       <div
         className={` fixed top-1/2 left-1/2 w-[600px] -translate-x-1/2 -translate-y-1/2 bg-white rounded-sm p-6 shadow-lg  max-w-full overflow-y-auto max-h-[90vh] z-10 ${
-          editMed ==='edit' ? "visible" : "invisible"
+          editMed === 'edit' ? 'visible' : 'invisible'
         }`}
       >
         <div className="flex justify-between items-center">
-          <h2 className="text-lg font-semibold mb-4">Edit Medication</h2>
+          <h2 className="text-lg font-semibold mb-4">{t('editMed')}</h2>
           <button
             type="button"
             className="cursor-pointer"
@@ -102,7 +103,7 @@ const EditMedicationForm = ({
           <div className="flex gap-3  flex-col lg:flex-row  ">
             <div className="flex-1 flex flex-col">
               <label className="text-sm font-medium mb-1">
-                Medication Name *
+                {t('medName')} *
               </label>
               <input
                 type="text"
@@ -115,7 +116,7 @@ const EditMedicationForm = ({
             </div>
 
             <div className="lg:w-24 flex flex-col">
-              <label className="text-sm font-medium mb-1">Dose *</label>
+              <label className="text-sm font-medium mb-1"> {t('dose')} *</label>
               <input
                 type="text"
                 placeholder="500"
@@ -127,13 +128,13 @@ const EditMedicationForm = ({
             </div>
 
             <div className="lg:w-20 flex flex-col">
-              <label className="text-sm font-medium mb-1">Unit</label>
+              <label className="text-sm font-medium mb-1"> {t('unit')}</label>
               <input
                 type="text"
                 placeholder="mg"
                 className="p-2 bg-gray-100 rounded border border-gray-200 focus:outline-none focus:ring-1 focus:ring-blue-500"
                 required
-                value={medUnit} 
+                value={medUnit}
                 onChange={(e) => setMedUnit(e.target.value)}
               />
             </div>
@@ -141,7 +142,7 @@ const EditMedicationForm = ({
 
           {/* Instructions */}
           <div className="flex flex-col">
-            <label className="text-sm font-medium mb-1">Instructions</label>
+            <label className="text-sm font-medium mb-1"> {t('instructions')}</label>
             <input
               type="text"
               placeholder="e.g., Take with food"
@@ -155,7 +156,7 @@ const EditMedicationForm = ({
           {/* Warnings / Interactions */}
           <div className="flex flex-col">
             <label className="text-sm font-medium mb-1">
-              Warnings / Interactions
+               {t("warnings")}
             </label>
             <input
               type="text"
@@ -169,9 +170,9 @@ const EditMedicationForm = ({
 
           {/* Schedule Times */}
           <div className="flex flex-col">
-            <label className="text-sm font-medium mb-2">Schedule Times *</label>
+            <label className="text-sm font-medium mb-2"> {t("scheduleTime")}  *</label>
             <div className="flex gap-2 lg:items-center flex-col lg:flex-row">
-              {medInterval === "as needed" && (
+              {medInterval === 'as needed' && (
                 <input
                   type="text"
                   placeholder="3 times daily"
@@ -181,7 +182,7 @@ const EditMedicationForm = ({
               )}
               <select
                 className={`p-2 bg-gray-100 rounded border border-gray-200 focus:outline-none focus:ring-1 focus:ring-blue-500 ${
-                  medInterval === "as needed" ? "w-1/2" : "w-full"
+                  medInterval === 'as needed' ? 'w-1/2' : 'w-full'
                 }`}
                 value={medInterval}
                 onChange={(e) => setMedInterval(e.target.value)}
@@ -206,7 +207,7 @@ const EditMedicationForm = ({
           {/* Start / End Date */}
           <div className="flex gap-3">
             <div className="flex-1 flex flex-col">
-              <label className="text-sm font-medium mb-1">Start Date</label>
+              <label className="text-sm font-medium mb-1"> {t("start")}</label>
               <input
                 type="date"
                 className="p-2 bg-gray-100 rounded border border-gray-200 focus:outline-none focus:ring-1 focus:ring-blue-500"
@@ -218,7 +219,7 @@ const EditMedicationForm = ({
 
             <div className="flex-1 flex flex-col">
               <label className="text-sm font-medium mb-1">
-                End Date (Optional)
+                 {t("end")}
               </label>
               <input
                 type="date"
@@ -231,7 +232,7 @@ const EditMedicationForm = ({
 
           {/* Notes */}
           <div className="flex flex-col">
-            <label className="text-sm font-medium mb-1">Notes</label>
+            <label className="text-sm font-medium mb-1">{t("notes")}</label>
             <textarea
               rows={3}
               className="p-2 bg-gray-100 rounded border border-gray-200 focus:outline-none focus:ring-1 focus:ring-blue-500"
@@ -243,22 +244,22 @@ const EditMedicationForm = ({
             <button
               type="submit"
               disabled={isPending}
-              className="bg-black text-white  rounded-md p-1 grow hover:bg-opacity-80 transition-colors duration-200 disabled:opacity-80"
+              className="bg-[#48a5fc] hover:opacity-50  text-white  rounded-md p-1 grow hover:bg-opacity-80 transition-colors duration-200 disabled:opacity-80"
             >
-              {isPending ? "Editing..." : "Edit medication"}
+              {isPending ?  <span>{t("editing")}</span> : <span>{t("editMed")}</span> }
             </button>
             <button
               type="button"
               className=" text-black rounded-md p-1 border"
               onClick={() => setEditMed(false)}
             >
-              Cancel
+              {t('cancel')}
             </button>
           </div>
         </form>
       </div>
     </>
-  );
+  )
 };
 
 export default EditMedicationForm;

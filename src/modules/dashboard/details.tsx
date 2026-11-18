@@ -9,8 +9,10 @@ import { useAuth } from '../../Firebase/auth-context'
 import { toast } from 'sonner'
 import { Loader2 } from 'lucide-react'
 import { FiEdit } from 'react-icons/fi'
+import { useTranslation } from 'react-i18next'
 
 const MedDetails = ({ med, setIsOpen }: {setIsOpen:(value:Medication)=>void, med: Medication }) => {
+  const {t} = useTranslation()
   const startDate = med?.medStart ? new Date(med.medStart) : null
   const today = new Date()
 
@@ -38,7 +40,7 @@ const MedDetails = ({ med, setIsOpen }: {setIsOpen:(value:Medication)=>void, med
     },
     onError: (error) => {
       console.error(error)
-      toast.error('Error editing medication')
+      toast.error(t('editMedError'))
     },
   })
 
@@ -67,21 +69,24 @@ const MedDetails = ({ med, setIsOpen }: {setIsOpen:(value:Medication)=>void, med
               {med.medInteractions}
             </span>{' '}
           </div>
-          <button type="button" onClick={()=>setIsOpen(med)}>
-           <FiEdit className='text-lg'/>
+          <button type="button" onClick={() => setIsOpen(med)}>
+            <FiEdit className="text-lg" />
           </button>
         </div>
         <div className="flex gap-1">
           {!med?.isTaken ? (
-            <span
+            <button
+              type="button"
               className={`border ${isMedOverdue && 'border-red-500 text-red-500'} "py-px rounded-md min-w-20 lg:w-[100px] block text-center`}
             >
-              {isMedUpcoming
-                ? 'Upcoming'
-                : isMedOverdue
-                  ? 'Overdue'
-                  : 'Due today'}
-            </span>
+              {isMedUpcoming ? (
+                <span>{t("upcoming")}</span>
+              ) : isMedOverdue ? (
+                <span>{t("overdue")}</span>
+              ) : (
+               <span>{t("due")}</span>
+              )}
+            </button>
           ) : null}
           <button
             type="button"
@@ -91,13 +96,13 @@ const MedDetails = ({ med, setIsOpen }: {setIsOpen:(value:Medication)=>void, med
           >
             {isPending ? (
               <div className="flex gap-1 items-center">
-                Take
+                {t('take')}
                 <Loader2 className="h-4 w-4 animate-spin" />
               </div>
             ) : med?.isTaken ? (
-              'Taken'
+              <span>{t("taken")}</span>
             ) : (
-              'Take'
+              <span>{t("take")}</span>
             )}
           </button>
         </div>

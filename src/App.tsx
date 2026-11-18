@@ -7,11 +7,9 @@ import Sidebar from "./Pages/Sidebar";
 import Settings from "./Pages/settings";
 import Medications from "./Pages/medications";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import EnableNotification from "./modules/notification/enable-notification";
 import { onMessage } from "firebase/messaging";
 import { messaging } from "./Firebase/config";
 import { useEffect } from 'react'
-
 
  
 const App = () => {
@@ -56,7 +54,6 @@ return (
        <Toaster richColors={ true} />
        <RouterProvider router={router}/>
        </QueryClientProvider>
-       <EnableNotification/>
      </main>
    )
  }

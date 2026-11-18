@@ -1,7 +1,8 @@
-import { RiCapsuleLine } from "react-icons/ri";
-import { MdWarning } from "react-icons/md";
-import { FiEdit, FiTrash2 } from "react-icons/fi";
-import { type Medication } from "../../lib/type";
+import { RiCapsuleLine } from 'react-icons/ri'
+import { MdWarning } from 'react-icons/md'
+import { FiEdit, FiTrash2 } from 'react-icons/fi'
+import { type Medication } from '../../lib/type'
+import { useTranslation } from 'react-i18next'
 
 //TODO
 //allow keyboard users tab into med box to interact with it to improve UX
@@ -11,11 +12,12 @@ const MedHistory = ({
   med,
   setSelectedMed,
 }: {
-  setDeleteMed: (value: boolean) => void;
-  setEditMed: (value: boolean) => void;
-  med: Medication;
-  setSelectedMed: (value: Medication) => void;
+  setDeleteMed: (value: boolean) => void
+  setEditMed: (value: boolean) => void
+  med: Medication
+  setSelectedMed: (value: Medication) => void
 }) => {
+  const {t} = useTranslation()
   return (
     <>
       <div className="bg-white rounded-md border border-[#bdbdbd] p-5">
@@ -33,20 +35,20 @@ const MedHistory = ({
             </div>
           </div>
           <span className="pt-3 pb-1 block text-[#bdbdbd]">
-            {med?.medInstructions ?? "N/A"}
+            {med?.medInstructions ?? 'N/A'}
           </span>
           <div className="bg-amber-50 text-amber-800 flex gap-1 p-1.5 rounded-md items-center mt-1 mb-2">
             <MdWarning className="text-amber-200" />
-            {med?.medInteractions ?? "N/A"}
+            {med?.medInteractions ?? 'N/A'}
           </div>
           <div>
-            <strong className="font-med?mibold block pb-0.5">Schedule:</strong>
+            <strong className="font-med?mibold block pb-0.5">{t("schedule")}:</strong>
             <div className="flex gap-2 text-[10px]">
-              <span className="font-med?mibold bg-gray-100 rounded-md p-1">
+              <span className="font-semibold bg-gray-100 rounded-md p-1">
                 {med?.medInterval}
               </span>
-              <span className="font-med?mibold bg-gray-100 rounded-md p-1">
-                Ends: {med?.medEnddate ?? "N/A"}
+              <span className="font-semibold bg-gray-100 rounded-md p-1">
+                {t("ends")}: {med?.medEnddate ?? 'N/A'}
               </span>
             </div>
             <div className="flex gap-1 items-center pt-3">
@@ -54,17 +56,20 @@ const MedHistory = ({
                 type="button"
                 className="flex-1 border border-[#f0ebeb] rounded-md gap-1  flex items-center justify-center"
                 onClick={() => {
-                  setEditMed(Boolean('edit'));
-                  setSelectedMed(med);
+                  setEditMed(Boolean('edit'))
+                  setSelectedMed(med)
                 }}
               >
                 <FiEdit />
-                Edit
+                {t("edit")}
               </button>
-              <button type="button" onClick={() => {
-                setDeleteMed(Boolean('delete'))
-                setSelectedMed(med)
-              }}>
+              <button
+                type="button"
+                onClick={() => {
+                  setDeleteMed(Boolean('delete'))
+                  setSelectedMed(med)
+                }}
+              >
                 <FiTrash2 className="text-red-700" />
               </button>
             </div>
@@ -72,7 +77,7 @@ const MedHistory = ({
         </div>
       </div>
     </>
-  );
-};
+  )
+}
 
-export default MedHistory;
+export default MedHistory

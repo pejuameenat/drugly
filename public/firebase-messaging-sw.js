@@ -1,14 +1,18 @@
-import { initializeApp } from 'firebase/app'
-import { getMessaging,onBackgroundMessage } from 'firebase/messaging/sw'
+ importScripts(
+  'https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js',
+)
+importScripts(
+  'https://www.gstatic.com/firebasejs/10.14.1/firebase-messaging-compat.js',
+)
 
 const firebaseMessaging = initializeApp({
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  apiKey: 'AIzaSyACMVqooq_nGbVbGYXsl9Mbp-TfDtny268',
+  authDomain: 'drugly-215ad.firebaseapp.com',
+  projectId: 'drugly-215ad',
   storageBucket: 'drugly-215ad.firebasestorage.app',
-  messagingSenderId: import.meta.env.VITE_MESSAGING_ID,
-  appId: import.meta.env.VITE_APP_ID,
-  measurementId: import.meta.env.VITE_MEASUREMENT_ID,
+  messagingSenderId: '384458881651',
+  appId: '1:384458881651:web:9a88f7ba47eb0d334ac806',
+  measurementId: 'G-JGFE29HDY4',
 })
 
 const messaging = getMessaging(firebaseMessaging)

@@ -17,12 +17,13 @@ const ReusableHeader = ({
       </div>
       <button
         type="button"
-        className="bg-[#141414] p-2 text-white rounded-md text-[12px] lg:text-sm"
-        onClick={onClick}>
+        className="bg-[#48a5fc] hover:opacity-50 p-2 text-white rounded-md text-[12px] lg:text-sm"
+        onClick={onClick}
+      >
         {buttonText}
       </button>
     </div>
-  );
+  )
 };
 
 export default ReusableHeader;

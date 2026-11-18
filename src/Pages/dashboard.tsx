@@ -1,63 +1,64 @@
-import { Link } from "react-router-dom";
-import { useMemo , useState} from "react";
-import MedDetails from "../modules/dashboard/details";
-import { auth } from "../Firebase/config";
-import { fetchMedications } from "../lib/utilqueries.ts/medicationquery";
-import { useQuery } from "@tanstack/react-query";
-import { Loader2, Package } from "lucide-react";
-import { useAuth } from "../Firebase/auth-context";
-import UniversalOverlay from "../components/layout/universal-overlay";
-import EditMedicationForm from "../modules/Medication/edit-medication";
-import type { Medication } from "../lib/type";
+import { Link } from 'react-router-dom'
+import { useMemo, useState } from 'react'
+import MedDetails from '../modules/dashboard/details'
+import { auth } from '../Firebase/config'
+import { fetchMedications } from '../lib/utilqueries.ts/medicationquery'
+import { useQuery } from '@tanstack/react-query'
+import { Loader2, Package } from 'lucide-react'
+import { useAuth } from '../Firebase/auth-context'
+import UniversalOverlay from '../components/layout/universal-overlay'
+import EditMedicationForm from '../modules/Medication/edit-medication'
+import type { Medication } from '../lib/type'
+import { useTranslation } from 'react-i18next'
 
 const Dashboard = () => {
-const[isEdit , setIsEdit] = useState<Medication | null>(null)
-  const { userId, loading } = useAuth();
+  const [isEdit, setIsEdit] = useState<Medication | null>(null)
+  const { userId, loading } = useAuth()
+  const { t } = useTranslation()
 
   const {
     data: medications = [],
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ["medications", userId],
+    queryKey: ['medications', userId],
     queryFn: () => fetchMedications(userId!),
     enabled: !!userId || !loading,
-  });
+  })
 
   const todaysMedications = useMemo(
     () =>
       medications?.filter((med) => {
-        const createdOrStartsToday =  new Date(med?.medStart ?? "").toDateString() ===
-        new Date().toDateString() ||
-        med?.createdAt?.toDate().toDateString() === new Date().toDateString()
-        return createdOrStartsToday && med?.isTaken === false;
-        
+        const createdOrStartsToday =
+          new Date(med?.medStart ?? '').toDateString() ===
+            new Date().toDateString() ||
+          med?.createdAt?.toDate().toDateString() === new Date().toDateString()
+        return createdOrStartsToday && med?.isTaken === false
       }),
     [medications],
-  );
+  )
 
   const takenMedications = useMemo(
     () =>
       todaysMedications?.filter((med) => {
-        return med?.isTaken === true;
+        return med?.isTaken === true
       }),
     [todaysMedications],
-  );
+  )
 
   const notTakenMedications = useMemo(
     () =>
       todaysMedications?.filter((med) => {
-        return med?.isTaken === false;
+        return med?.isTaken === false
       }),
     [todaysMedications],
-  );
-  console.log(notTakenMedications)
+  )
 
   // const calculateAdherencePercentage = takenMedications
   const adherencePercentage =
     todaysMedications?.length > 0
       ? (takenMedications?.length / todaysMedications?.length) * 100
-      : 0;
+      : 0
   //use interval and updatedAt to determine next medication and time until next medication
 
   if (isLoading) {
@@ -65,24 +66,27 @@ const[isEdit , setIsEdit] = useState<Medication | null>(null)
       <div className="flex justify-center items-center h-screen">
         <Loader2 size={40} className="animate-spin" />
       </div>
-    );
+    )
   }
   if (isError) {
     return (
       <div className="flex justify-center items-center h-screen text-red-600 text-4xl">
-        Error
+        {t('error')}
       </div>
-    );
+    )
   }
 
   return (
     <>
       <div className="lg:ml-52 pt-18 lg:pt-14 px-4  ">
         <div className="pb-8 ">
-          <h1 className="text-xl lg:text-3xl font-semibold">Dashboard</h1>
+          <h1 className="text-xl lg:text-3xl font-semibold">
+            {' '}
+            {t('dashboard')}
+          </h1>
           <span className="text[12px] text-[#141414]">
-            Welcome <strong>{auth.currentUser?.displayName}</strong>, your
-            medication overview for today
+            {t('welcome')} <strong>{auth.currentUser?.displayName}</strong>,{' '}
+            {t('description')}
           </span>
         </div>
         <div className="lg:grid lg:grid-cols-4 gap-4 items-start">
@@ -90,16 +94,17 @@ const[isEdit , setIsEdit] = useState<Medication | null>(null)
             <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-2 md:gap-0">
               <div className="text-sm">
                 <strong className="block text-[#141414] font-medium">
-                  Today's Medication
+                  {t('today')}
                 </strong>
                 {todaysMedications?.length > 0 && (
                   <>
                     <span className="text-[12px]">
                       {takenMedications?.length} of {todaysMedications?.length}{' '}
-                      taken{' '}
+                      {t('taken')}
                     </span>
                     <span className="text-[12px]">
-                      • Next: {notTakenMedications[0]?.medName} to be taken{' '}
+                      {t('next')} {notTakenMedications[0]?.medName}{' '}
+                      {t('toBeTaken')}
                       {notTakenMedications[0]?.medInterval}
                     </span>
                   </>
@@ -107,60 +112,71 @@ const[isEdit , setIsEdit] = useState<Medication | null>(null)
               </div>
               <Link
                 to="/medications"
-                className="bg-[#141414] p-2 text-white rounded-md text-[12px] lg:text-sm w-fit"
+                className="bg-[#48a5fc] hover:opacity-50 p-2 text-white rounded-md text-[12px] lg:text-sm w-fit"
               >
-                + Add Medication
+                + {t('addMedication')}
               </Link>
             </div>
 
             {todaysMedications.length === 0 ? (
               <div className="flex  flex-col items-center justify-center h-screen text-gray-600">
                 <Package size={100} />
-                <span>You don't have any medications for today.</span>
+                <span> {t('dontHaveMedication')}.</span>
               </div>
             ) : (
               <article className="pt-4 flex flex-col gap-5">
                 {/* items */}
                 {todaysMedications?.map((med) => {
-                  return <MedDetails med={med} key={med?.id}  setIsOpen={()=>setIsEdit(med)}/>
+                  return (
+                    <MedDetails
+                      med={med}
+                      key={med?.id}
+                      setIsOpen={() => setIsEdit(med)}
+                    />
+                  )
                 })}
               </article>
             )}
           </article>
           <div className="bg-white rounded-md p-4 border border-[#bdbdbd] text-sm mt-4 lg:mt-0">
-            <span className="font-semibold  ">Todays's Adherence</span>
+            <span className="font-semibold  ">{t('todaysAdherence')}</span>
             <span className="block font-semibold text-center pt-4 text-xl">
               {adherencePercentage}%
             </span>
-            <span className="text-[#bdbdbd] text-[12px] text-center block pb-2">
-              {adherencePercentage > 20
-                ? 'on Track'
-                : adherencePercentage === 0
-                  ? 'You have not taken any medication today'
-                  : 'Needs Improvement'}
-            </span>
+            <div className="text-[#bdbdbd] text-[12px] text-center block pb-2">
+              {adherencePercentage > 20 ? (
+                <span>{t('onTrack')}</span>
+              ) : adherencePercentage === 0 ? (
+                <span>{t('notTakenToday')}</span>
+              ) : (
+                <span>{t('needsImprove')}</span>
+              )}
+            </div>
             <div className="rounded-full h-1.5 bg-[#bdbdbd]">
               <div
-                className="bg-[#141414] rounded-l-full h-full"
+                className="bg-[#6FA8DC] rounded-l-full h-full"
                 style={{ width: `${adherencePercentage}%` }}
               ></div>
             </div>
             <div className="text-[#bdbdbd] flex justify-between text-[12px] pt-2">
-              <span>{takenMedications?.length} taken</span>
-              <span>{notTakenMedications?.length} remaining</span>
+              <span>{takenMedications?.length} {t("taken")}</span>
+              <span>{notTakenMedications?.length} {t("remaining")}</span>
             </div>
           </div>
         </div>
       </div>
 
-      <UniversalOverlay isOpen={isEdit!== null} setIsOpen={()=>setIsEdit(null)} />
+      <UniversalOverlay
+        isOpen={isEdit !== null}
+        setIsOpen={() => setIsEdit(null)}
+      />
       <EditMedicationForm
-        editMed={isEdit!==null}
-        setEditMed={()=>setIsEdit(null)}
+        editMed={isEdit !== null}
+        setEditMed={() => setIsEdit(null)}
         existingMed={isEdit}
       />
     </>
   )
-};
+}
 
-export default Dashboard;
+export default Dashboard

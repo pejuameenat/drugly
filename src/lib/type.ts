@@ -30,5 +30,8 @@ export type CreateMedicationInput = {
   medNotes?: string;
   isActive: boolean;
   isTaken: boolean;
-  reminderMins?: number;
+  reminderMins?: string;
+  fcmToken:string;
+  scheduledNotificationTime?: string | null;
+  notificationStatus: string;
 };
