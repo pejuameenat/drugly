@@ -1,65 +1,62 @@
-import { X } from "lucide-react";
-import { database, auth } from "../../Firebase/config";
-import { addDoc, collection, getDoc, doc } from "firebase/firestore";
-import { useState, type FormEvent } from "react";
-import { toast } from "sonner";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { type CreateMedicationInput } from "../../lib/type";
-import { useTranslation } from "react-i18next";
+import { X } from 'lucide-react'
+import { database, auth } from '../../Firebase/config'
+import { addDoc, collection, getDoc, doc } from 'firebase/firestore'
+import { useState, type FormEvent } from 'react'
+import { toast } from 'sonner'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { type CreateMedicationInput } from '../../lib/type'
+import { useTranslation } from 'react-i18next'
 
 const MedicationForm = ({
   showForm,
   setShowForm,
 }: {
-  showForm: string|null;
-  setShowForm: (value: boolean) => void;
+  showForm: string | null
+  setShowForm: (value: boolean) => void
 }) => {
-  const [medName, setMedName] = useState("");
-  const [medDose, setMedDose] = useState("");
-  const [medInstructions, setMedInstructions] = useState("");
-  const [medInteractions, setMedInteractions] = useState("");
-  const [medUnit, setMedUnit] = useState("");
-  const [medInterval, setMedInterval] = useState("");
-  const [medNotes, setMedNotes] = useState("");
-  const [medStart, setMedStart] = useState("");
-  const [medEnddate, setMedEnddate] = useState("");
-  const [customMed, setCustomMed] = useState("");
-  const [reminderTime ] = useState('');
+  const [medName, setMedName] = useState('')
+  const [medDose, setMedDose] = useState('')
+  const [medInstructions, setMedInstructions] = useState('')
+  const [medInteractions, setMedInteractions] = useState('')
+  const [medUnit, setMedUnit] = useState('')
+  const [medInterval, setMedInterval] = useState('')
+  const [medNotes, setMedNotes] = useState('')
+  const [medStart, setMedStart] = useState('')
+  const [medEnddate, setMedEnddate] = useState('')
+  const [customMed, setCustomMed] = useState('')
+  const [reminderTime, setReminderTime] = useState('')
 
-  const queryClient = useQueryClient();
-  const {t} = useTranslation()
+  const queryClient = useQueryClient()
+  const { t } = useTranslation()
 
   const addMedication = async (medData: CreateMedicationInput) => {
-    return await addDoc(collection(database, "medications"), {
+    return await addDoc(collection(database, 'medications'), {
       ...medData,
       createdAt: new Date(),
-    });
-  };
+    })
+  }
 
-  const {
-    mutate: addMed,
-    isPending,
-  } = useMutation({
+  const { mutate: addMed, isPending } = useMutation({
     mutationFn: addMedication,
     onSuccess: () => {
-      toast.success(t("addMedSuccess"));
+      toast.success(t('addMedSuccess'))
 
       queryClient.invalidateQueries({
-        queryKey: ["medications"],
-      });
+        queryKey: ['medications'],
+      })
 
-      setShowForm(false);
+      setShowForm(false)
     },
     onError: (err) => {
       console.error(err)
-      toast.error(t("errorAddMed"));
+      toast.error(t('errorAddMed'))
     },
-  });
+  })
 
-  const handleMedSubmit = async(e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const user = auth?.currentUser;
-    if (!user) return;
+  const handleMedSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    const user = auth?.currentUser
+    if (!user) return
 
     const tokenDocRef = doc(database, 'fcm_tokens', user.uid)
     const tokenSnapshot = await getDoc(tokenDocRef)
@@ -80,18 +77,18 @@ const MedicationForm = ({
       medUnit,
       medInstructions,
       medInteractions,
-      medInterval: medInterval=== 'as needed'? customMed:medInterval,
+      medInterval: medInterval === 'as needed' ? customMed : medInterval,
       medStart,
       medEnddate,
       medNotes,
       isActive: true,
       isTaken: false,
-      reminderMins:reminderTime,
+      reminderMins: reminderTime,
       fcmToken,
-      scheduledNotificationTime: combinedScheduledTime, 
-      notificationStatus: "pending" 
-    });
-  };
+      scheduledNotificationTime: combinedScheduledTime,
+      notificationStatus: 'pending',
+    })
+  }
 
   return (
     <>
@@ -122,6 +119,7 @@ const MedicationForm = ({
                 type="text"
                 placeholder="e.g., Metformin"
                 className="p-2 bg-gray-100 rounded border border-gray-200 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                value={medName}
                 required
                 onChange={(e) => setMedName(e.target.value)}
               />
@@ -133,6 +131,7 @@ const MedicationForm = ({
                 type="text"
                 placeholder="500"
                 className="p-2 bg-gray-100 rounded border border-gray-200 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                value={medDose}
                 required
                 onChange={(e) => setMedDose(e.target.value)}
               />
@@ -144,6 +143,7 @@ const MedicationForm = ({
                 type="text"
                 placeholder="mg"
                 className="p-2 bg-gray-100 rounded border border-gray-200 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                value={medUnit}
                 required
                 onChange={(e) => setMedUnit(e.target.value)}
               />
@@ -160,6 +160,7 @@ const MedicationForm = ({
               type="text"
               placeholder="e.g., Take with food"
               className="p-2 bg-gray-100 rounded border border-gray-200 focus:outline-none focus:ring-1 focus:ring-blue-500"
+              value={medInstructions}
               required
               onChange={(e) => setMedInstructions(e.target.value)}
             />
@@ -172,6 +173,7 @@ const MedicationForm = ({
               type="text"
               placeholder="e.g., Avoid alcohol"
               className="p-2 bg-gray-100 rounded border border-gray-200 focus:outline-none focus:ring-1 focus:ring-blue-500"
+              value={medInteractions}
               required
               onChange={(e) => setMedInteractions(e.target.value)}
             />
@@ -190,6 +192,7 @@ const MedicationForm = ({
                   placeholder="3 times daily"
                   className="p-2 bg-gray-100 rounded border border-gray-200 flex-1 focus:outline-none focus:ring-1
                    focus:ring-blue-500 w-full"
+                  value={customMed}
                   required
                   onChange={(e) => setCustomMed(e.target.value)}
                 />
@@ -198,15 +201,16 @@ const MedicationForm = ({
                 className={`p-2 bg-gray-100 rounded border border-gray-200 focus:outline-none focus:ring-1 focus:ring-blue-500 ${
                   medInterval === 'as needed' ? 'w-1/2' : 'w-full'
                 }`}
+                value={medInterval}
                 onChange={(e) => setMedInterval(e.target.value)}
               >
-                <option>every 8 hours</option>
-                <option>once Daily</option>
-                <option>twice Daily</option>
-                <option>3 times Daily</option>
-                <option>4 times Daily</option>
-                <option>Weekly</option>
-                <option>as needed</option>
+                <option value="every 8 hours" >every 8 hours</option>
+                <option value="once daily">once Daily</option>
+                <option value="twice daily">twice Daily</option>
+                <option value="3 times daily">3 times Daily</option>
+                <option value="4 times daily">4 times Daily</option>
+                <option value="weekly">Weekly</option>
+                <option value="as needed">as needed</option>
               </select>
               {/* <button
                 type="button"
@@ -224,6 +228,7 @@ const MedicationForm = ({
               <input
                 type="date"
                 className="p-2 bg-gray-100 rounded border border-gray-200 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                value={medStart}
                 required
                 onChange={(e) => setMedStart(e.target.value)}
               />
@@ -234,9 +239,23 @@ const MedicationForm = ({
               <input
                 type="date"
                 className="p-2 bg-gray-100 rounded border border-gray-200 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                value={medEnddate}
                 onChange={(e) => setMedEnddate(e.target.value)}
               />
             </div>
+          </div>
+          <div className="flex-1 flex flex-col">
+            <label className="text-sm font-medium mb-1">
+              {' '}
+              {t('reminderTime')}
+            </label>
+            <input
+              type="time"
+              className="p-2 bg-gray-100 rounded border border-gray-200 focus:outline-none focus:ring-1 focus:ring-blue-500"
+              value={reminderTime}
+              required
+              onChange={(e) => setReminderTime(e.target.value)}
+            />
           </div>
 
           {/* Notes */}
@@ -245,6 +264,7 @@ const MedicationForm = ({
             <textarea
               rows={3}
               className="p-2 bg-gray-100 rounded border border-gray-200 focus:outline-none focus:ring-1 focus:ring-blue-500"
+              value={medNotes}
               onChange={(e) => setMedNotes(e.target.value)}
             />
           </div>
@@ -278,6 +298,6 @@ const MedicationForm = ({
       </div>
     </>
   )
-};
+}
 
-export default MedicationForm;
+export default MedicationForm
