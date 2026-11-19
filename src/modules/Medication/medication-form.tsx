@@ -24,7 +24,7 @@ const MedicationForm = ({
   const [medStart, setMedStart] = useState("");
   const [medEnddate, setMedEnddate] = useState("");
   const [customMed, setCustomMed] = useState("");
-  const [reminderTime, setReminderTime] = useState('');
+  const [reminderTime ] = useState('');
 
   const queryClient = useQueryClient();
   const {t} = useTranslation()
